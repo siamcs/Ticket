@@ -1,506 +1,883 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HelpDesk — TKT-101</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TKT-101 – Cannot Login ERP</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#f4f5f7;--surface:#fff;--border:#e2e5ea;
-  --text:#1a1f36;--muted:#6b7280;--hint:#9ca3af;
-  --accent:#3b82f6;--accent-h:#2563eb;--accent-l:#eff6ff;
-  --green:#10b981;--green-l:#ecfdf5;
-  --red:#ef4444;--red-l:#fee2e2;
-  --orange:#f59e0b;--orange-l:#fffbeb;
-  --indigo:#6366f1;--indigo-l:#eef2ff;
-  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
-  --r:8px;
-}
-body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── GLOBAL TOP BAR ── */
-.topbar{height:46px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;z-index:10}
-.topbar-search{flex:1;max-width:480px;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 12px}
-.topbar-search input{border:none;background:transparent;outline:none;font-size:13px;color:var(--text);width:100%}
-.topbar-search input::placeholder{color:var(--hint)}
-.topbar-search i{color:var(--hint);font-size:12px}
-.topbar-spacer{flex:1}
-.topbar-icons{display:flex;align-items:center;gap:14px}
-.topbar-icons i{font-size:16px;color:var(--muted);cursor:pointer}
-.topbar-icons .notif{position:relative}
-.topbar-icons .notif .dot{position:absolute;top:-3px;right:-3px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1px solid #fff}
-.topbar-btn{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px}
-.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;cursor:pointer}
-.av-blue{background:#dbeafe;color:#1d4ed8}.av-green{background:#d1fae5;color:#065f46}
-.av-orange{background:#fed7aa;color:#c2410c}.av-purple{background:#ede9fe;color:#6d28d9}
-.av-pink{background:#fce7f3;color:#9d174d}.av-teal{background:#ccfbf1;color:#0f766e}
-.av-red{background:#fee2e2;color:#b91c1c}.av-yellow{background:#fef9c3;color:#854d0e}
-.av-lg{width:40px;height:40px;font-size:14px}
-.av-xl{width:46px;height:46px;font-size:16px}
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    background: #f4f6f9;
+    color: #1a1d23;
+    min-height: 100vh;
+  }
 
-/* ── BODY LAYOUT ── */
-.body-wrap{flex:1;display:flex;overflow:hidden}
+  /* ── TOP NAV ── */
+  .topnav {
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topnav .search-wrap {
+    flex: 1;
+    max-width: 420px;
+    position: relative;
+  }
+  .topnav .search-wrap input {
+    width: 100%;
+    height: 34px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 0 32px 0 12px;
+    font-size: 12.5px;
+    color: #374151;
+    outline: none;
+    background: #f9fafb;
+  }
+  .topnav .search-wrap input:focus { border-color: #3b82f6; background: #fff; }
+  .topnav .search-wrap .slash {
+    position: absolute; right: 9px; top: 50%; transform: translateY(-50%);
+    font-size: 10px; color: #9ca3af; background: #e5e7eb;
+    padding: 1px 5px; border-radius: 3px;
+  }
+  .topnav .spacer { flex: 1; }
+  .topnav .btn-new {
+    background: #2563eb; color: #fff; border: none;
+    border-radius: 6px; padding: 0 16px; height: 34px;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .topnav .btn-new:hover { background: #1d4ed8; }
+  .topnav .icon-btn {
+    width: 34px; height: 34px; border-radius: 6px;
+    border: 1px solid #e5e7eb; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 15px; color: #6b7280; position: relative;
+  }
+  .topnav .icon-btn:hover { background: #f3f4f6; }
+  .badge {
+    position: absolute; top: -4px; right: -4px;
+    background: #ef4444; color: #fff;
+    font-size: 9px; font-weight: 700;
+    width: 16px; height: 16px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #2563eb; color: #fff;
+    font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
 
-/* ── LEFT SIDEBAR ── */
-.sidebar{width:200px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
-.nav-item{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;cursor:pointer;color:var(--muted);font-size:12.5px;border-left:2px solid transparent;transition:background .12s}
-.nav-item:hover{background:#f8f9fb}
-.nav-item.active{color:var(--accent);background:var(--accent-l);border-left-color:var(--accent);font-weight:500}
-.nav-section{padding:12px 14px 3px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--hint)}
-.cnt{font-size:11px;padding:1px 6px;border-radius:10px;background:#f1f3f5;color:var(--muted)}
-.cnt.red{background:#fee2e2;color:#dc2626}
-.nav-item.active .cnt{background:var(--accent-l);color:var(--accent)}
-.agent-row{display:flex;align-items:center;justify-content:space-between;padding:5px 14px}
-.agent-info{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text)}
-.add-agent{display:flex;align-items:center;gap:5px;color:var(--accent);font-size:12px;cursor:pointer;padding:7px 14px}
+  /* ── LAYOUT ── */
+  .app-body {
+    display: flex;
+    height: calc(100vh - 52px);
+  }
 
-/* ── MAIN CENTER ── */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  /* ── LEFT SIDEBAR ── */
+  .sidebar {
+    width: 200px;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    overflow-y: auto;
+    flex-shrink: 0;
+    padding: 14px 0;
+  }
+  .sidebar-section { margin-bottom: 20px; }
+  .sidebar-label {
+    font-size: 10px; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; color: #9ca3af;
+    padding: 0 14px; margin-bottom: 4px;
+  }
+  .sidebar-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 5px 14px; cursor: pointer; border-radius: 0;
+    color: #374151; font-size: 12.5px; transition: background .1s;
+  }
+  .sidebar-item:hover { background: #f3f4f6; }
+  .sidebar-item.active { background: #eff6ff; color: #2563eb; font-weight: 600; }
+  .sidebar-item.overdue { color: #ef4444; }
+  .sidebar-count {
+    background: #f3f4f6; color: #6b7280;
+    font-size: 10.5px; font-weight: 600;
+    padding: 1px 7px; border-radius: 10px;
+    min-width: 22px; text-align: center;
+  }
+  .sidebar-item.overdue .sidebar-count { background: #fee2e2; color: #ef4444; }
+  .sidebar-item.active .sidebar-count { background: #dbeafe; color: #2563eb; }
 
-/* ── TICKET TOP NAV ── */
-.ticket-nav{height:44px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0}
-.btn-back{display:flex;align-items:center;gap:4px;color:var(--muted);font-size:12px;cursor:pointer;padding:4px 9px;border:1px solid var(--border);border-radius:5px;background:transparent}
-.btn-back:hover{background:var(--bg)}
-.tkt-id{font-weight:600;font-size:13px}
-.badge{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:500;padding:3px 8px;border-radius:20px;white-space:nowrap}
-.badge-red{background:#fee2e2;color:#b91c1c}
-.badge-green{background:var(--green-l);color:#065f46}
-.badge-blue{background:var(--accent-l);color:#1d4ed8}
-.badge-orange{background:var(--orange-l);color:#92400e}
-.badge-gray{background:#f1f3f5;color:#374151}
-.badge-indigo{background:var(--indigo-l);color:#4338ca}
-.badge-solved{background:#dbeafe;color:#1d4ed8}
-.btn{padding:5px 13px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:background .12s}
-.btn:hover{background:var(--bg)}
-.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn-primary:hover{background:var(--accent-h)}
-.btn-split{display:flex;border-radius:6px;overflow:hidden;border:1px solid var(--accent)}
-.btn-split .mp{background:var(--accent);color:#fff;padding:5px 13px;font-size:12px;font-weight:500;cursor:pointer;border:none}
-.btn-split .ap{background:#2563eb;color:#fff;padding:5px 8px;font-size:10px;cursor:pointer;border:none;border-left:1px solid #3b82f6}
+  .agent-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 14px; cursor: pointer; font-size: 12.5px; color: #374151;
+  }
+  .agent-item:hover { background: #f3f4f6; }
+  .agent-av {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #6366f1; color: #fff;
+    font-size: 10px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .agent-av.green { background: #10b981; }
+  .agent-av.amber { background: #f59e0b; }
+  .agent-av.rose  { background: #f43f5e; }
+  .agent-name { flex: 1; }
+  .agent-count { font-size: 10.5px; font-weight: 600; color: #6b7280; }
 
-/* ── CENTER CONTENT ── */
-.center{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+  .add-agent-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 14px; font-size: 12px; color: #2563eb;
+    cursor: pointer; font-weight: 500;
+  }
+  .add-agent-btn:hover { text-decoration: underline; }
 
-.ticket-hdr{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px}
-.ticket-title{font-size:17px;font-weight:600;margin-bottom:8px}
-.ticket-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.meta-item{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:12px}
-.meta-item i{font-size:12px;color:var(--hint)}
+  /* ── MAIN CONTENT ── */
+  .main-content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
 
-/* TABS */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.tabs{display:flex;border-bottom:1px solid var(--border);padding:0 16px;overflow-x:auto}
-.tab{padding:10px 12px;font-size:12.5px;font-weight:500;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:4px}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.tab-c{font-size:10px;background:#f1f3f5;color:var(--muted);padding:1px 5px;border-radius:9px}
-.tab.active .tab-c{background:var(--accent-l);color:var(--accent)}
-.card-body{padding:14px 16px}
+  /* ticket header */
+  .ticket-header {
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 22px 0;
+  }
+  .ticket-breadcrumb {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+  }
+  .btn-back {
+    display: flex; align-items: center; gap: 4px;
+    color: #374151; font-size: 12px; cursor: pointer;
+    background: none; border: none;
+  }
+  .btn-back:hover { color: #2563eb; }
+  .ticket-id { font-size: 12px; color: #6b7280; font-weight: 500; }
+  .priority-badge {
+    background: #fff7ed; color: #c2410c;
+    border: 1px solid #fed7aa;
+    font-size: 11px; font-weight: 600;
+    padding: 2px 9px; border-radius: 5px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .priority-badge::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%; background: #f97316;
+  }
+  .ticket-title {
+    font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 8px;
+  }
+  .ticket-meta {
+    display: flex; align-items: center; gap: 18px; margin-bottom: 12px;
+  }
+  .ticket-meta span {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: #6b7280;
+  }
+  .ticket-meta span svg { flex-shrink: 0; }
 
-/* INFO GRID */
-.info-wrap{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
-.info-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px 20px}
-.info-row{display:flex;flex-direction:column;gap:2px}
-.info-lbl{font-size:11px;color:var(--hint);font-weight:500}
-.info-val{font-size:12.5px;color:var(--text)}
-.section-label{font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px}
-.divider{border:none;border-top:1px solid var(--border);margin:12px 0}
+  .ticket-actions {
+    display: flex; align-items: center; gap: 8px; padding-bottom: 10px;
+  }
+  .btn { border-radius: 6px; padding: 0 14px; height: 32px; font-size: 12.5px; font-weight: 500; cursor: pointer; border: 1px solid; display: flex; align-items: center; gap: 5px; }
+  .btn-outline { background: #fff; border-color: #d1d5db; color: #374151; }
+  .btn-outline:hover { background: #f9fafb; }
+  .btn-primary { background: #2563eb; border-color: #2563eb; color: #fff; }
+  .btn-primary:hover { background: #1d4ed8; }
+  .btn-split {
+    display: flex; align-items: center;
+  }
+  .btn-split .main { border-right: none; border-radius: 6px 0 0 6px; }
+  .btn-split .arrow { border-left: 1px solid rgba(255,255,255,.3); border-radius: 0 6px 6px 0; padding: 0 8px; }
 
-/* ATTACHMENTS */
-.att-grid{display:flex;gap:10px}
-.att-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--border);border-radius:var(--r);background:#fafafa}
-.att-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px}
-.att-img{background:#dbeafe;color:#1d4ed8}.att-doc{background:#ede9fe;color:#6d28d9}
-.att-name{font-size:12px;font-weight:500}.att-size{font-size:11px;color:var(--hint)}
+  /* tabs */
+  .tabs { display: flex; gap: 0; border-bottom: none; margin-top: 0; }
+  .tab {
+    padding: 8px 14px; font-size: 12.5px; cursor: pointer; color: #6b7280;
+    border-bottom: 2px solid transparent; white-space: nowrap;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .tab:hover { color: #111827; }
+  .tab.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
+  .tab .cnt {
+    background: #e0e7ff; color: #3730a3;
+    font-size: 10px; font-weight: 700; border-radius: 10px;
+    padding: 1px 6px;
+  }
 
-/* CONVERSATIONS */
-.conv-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.conv-filters{display:flex;border:1px solid var(--border);border-radius:5px;overflow:hidden}
-.cf-btn{padding:4px 10px;font-size:12px;border:none;background:transparent;color:var(--muted);cursor:pointer;border-right:1px solid var(--border)}
-.cf-btn:last-child{border-right:none}
-.cf-btn.active{background:var(--accent);color:#fff}
-.conv-msg{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #f3f4f6}
-.conv-msg:last-child{border-bottom:none}
-.conv-body{flex:1}
-.conv-meta{display:flex;align-items:center;gap:7px;margin-bottom:3px}
-.conv-name{font-weight:600;font-size:12.5px}
-.conv-time{font-size:11px;color:var(--hint);margin-left:auto}
-.conv-text{font-size:12.5px;color:var(--muted)}
-.src{font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em}
-.src-pub{background:var(--accent-l);color:var(--accent)}
-.src-int{background:#fef3c7;color:#92400e}
-.src-sys{background:#f1f5f9;color:#64748b}
-.sys-av{width:30px;height:30px;border-radius:50%;background:#f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+  /* ── TICKET BODY ── */
+  .ticket-body {
+    display: flex;
+    gap: 0;
+    flex: 1;
+    padding: 0;
+  }
 
-/* REPLY */
-.reply-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.reply-tabs{display:flex;border-bottom:1px solid var(--border)}
-.reply-tab{padding:8px 14px;font-size:12.5px;font-weight:500;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent}
-.reply-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.reply-input{width:100%;padding:10px 14px;border:none;outline:none;font-family:var(--font);font-size:12.5px;color:var(--muted);resize:none;min-height:60px;background:var(--surface)}
-.reply-footer{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--border)}
-.reply-tools{display:flex;gap:10px;color:var(--hint)}
-.reply-tools i{cursor:pointer;font-size:14px}
-.reply-tools i:hover{color:var(--muted)}
+  .ticket-main {
+    flex: 1;
+    padding: 18px 22px;
+    overflow-y: auto;
+  }
 
-/* RIGHT PANEL */
-.right{width:260px;background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;flex-shrink:0}
-.rp-hdr{padding:12px 14px;font-weight:600;font-size:13px;border-bottom:1px solid var(--border)}
-.rp-sec{padding:12px 14px;border-bottom:1px solid var(--border)}
-.rp-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--hint);margin-bottom:10px}
-.rp-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
-.rp-label{font-size:12px;color:var(--hint)}
-.rp-val{font-size:12px;color:var(--text);font-weight:500}
-.rp-sel{font-size:11.5px;border:1px solid var(--border);border-radius:5px;padding:3px 20px 3px 7px;background:#fafafa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%239ca3af'/%3E%3C/svg%3E") no-repeat right 6px center;color:var(--text);cursor:pointer;appearance:none;outline:none}
-.assign-me{font-size:11px;color:var(--accent);cursor:pointer}
-.sla-item{margin-bottom:9px}
-.sla-hdr{display:flex;justify-content:space-between;margin-bottom:3px}
-.sla-bar{height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden}
-.sla-fill{height:100%;border-radius:3px}
-.fill-green{background:var(--green)}.fill-orange{background:var(--orange)}
-.sla-time{font-size:12px;font-weight:600}
-.sla-time.green{color:var(--green)}.sla-time.orange{color:var(--orange)}
-.tags-wrap{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
-.tag{font-size:11px;padding:3px 8px;background:#f1f5f9;color:#475569;border-radius:20px}
-.tag-add{font-size:16px;color:var(--hint);cursor:pointer;line-height:1}
-.more-row{display:flex;justify-content:space-between;padding:3px 0}
-.more-lbl{font-size:11.5px;color:var(--hint)}
-.more-val{font-size:11.5px;color:var(--text)}
+  /* cards */
+  .card {
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+    padding: 16px 18px; margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 13px; font-weight: 700; color: #111827; margin-bottom: 12px;
+  }
 
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:4px}
-.tabs::-webkit-scrollbar{height:0}
+  /* customer info grid */
+  .info-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 18px;
+  }
+  .info-cell label { font-size: 11px; color: #9ca3af; display: block; margin-bottom: 2px; }
+  .info-cell span { font-size: 12.5px; color: #111827; font-weight: 500; }
+  .info-cell .customer-priority {
+    display: inline-flex; align-items: center;
+    background: #fee2e2; color: #dc2626;
+    font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 4px;
+  }
+
+  .customer-avatar-col {
+    display: flex; justify-content: flex-end; align-items: flex-start;
+  }
+  .cust-av {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: #4f46e5; color: #fff;
+    font-size: 14px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* description */
+  .desc-text { font-size: 12.5px; color: #374151; line-height: 1.6; }
+
+  /* attachments */
+  .attachments-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .attachment-item {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px 12px;
+    cursor: pointer; background: #f9fafb; min-width: 120px;
+  }
+  .attachment-item:hover { background: #eff6ff; border-color: #bfdbfe; }
+  .attach-icon { width: 32px; height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .attach-icon.img { background: #1e3a5f; color: #93c5fd; }
+  .attach-icon.txt { background: #e0e7ff; color: #4f46e5; }
+  .attach-info .name { font-size: 11.5px; font-weight: 600; color: #111827; }
+  .attach-info .size { font-size: 10.5px; color: #9ca3af; }
+  .attach-actions { margin-left: auto; display: flex; gap: 4px; }
+  .attach-actions button { background: none; border: none; font-size: 14px; cursor: pointer; color: #9ca3af; }
+
+  /* conversations */
+  .conv-tabs {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    border-bottom: 1px solid #e5e7eb; padding-bottom: 8px;
+  }
+  .conv-tab { font-size: 12px; color: #6b7280; cursor: pointer; padding: 4px 0; }
+  .conv-tab.active { color: #2563eb; font-weight: 600; border-bottom: 2px solid #2563eb; margin-bottom: -9px; }
+  .conv-tab span { background: #f3f4f6; color: #6b7280; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; margin-left: 4px; }
+  .conv-actions { margin-left: auto; display: flex; gap: 8px; }
+  .conv-action-btn {
+    background: none; border: 1px solid #d1d5db; border-radius: 6px;
+    padding: 5px 10px; font-size: 11.5px; color: #374151; cursor: pointer;
+    font-weight: 500;
+  }
+  .conv-action-btn:hover { background: #f3f4f6; }
+
+  .conv-msg { display: flex; gap: 10px; margin-bottom: 14px; align-items: flex-start; }
+  .conv-msg .av {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #10b981; color: #fff;
+    font-size: 10px; font-weight: 700; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .conv-msg .av.agent-av2 { background: #6366f1; }
+  .conv-msg .av.sys-av { background: #9ca3af; font-size: 12px; }
+  .conv-header { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; flex-wrap: wrap; }
+  .conv-name { font-size: 12.5px; font-weight: 700; color: #111827; }
+  .conv-role-badge {
+    font-size: 9.5px; font-weight: 700; padding: 1px 7px; border-radius: 10px; text-transform: uppercase;
+  }
+  .badge-public { background: #dcfce7; color: #15803d; }
+  .badge-internal { background: #fef3c7; color: #92400e; }
+  .badge-system { background: #f3f4f6; color: #6b7280; }
+  .conv-time { font-size: 10.5px; color: #9ca3af; }
+  .conv-body { font-size: 12.5px; color: #374151; line-height: 1.5; }
+
+  /* reply box */
+  .reply-tabs {
+    display: flex; gap: 0; border-bottom: 1px solid #e5e7eb; margin-bottom: 10px;
+  }
+  .reply-tab {
+    padding: 6px 14px; font-size: 12px; cursor: pointer; color: #6b7280;
+    border-bottom: 2px solid transparent;
+  }
+  .reply-tab.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
+  .reply-box {
+    border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;
+  }
+  .reply-input {
+    width: 100%; min-height: 68px; padding: 10px 14px;
+    font-size: 12.5px; color: #374151;
+    border: none; outline: none; resize: none; font-family: inherit;
+    color: #9ca3af;
+  }
+  .reply-footer {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-top: 1px solid #f3f4f6; background: #f9fafb;
+  }
+  .reply-footer .icon-actions { display: flex; gap: 4px; }
+  .reply-footer button.icon { background: none; border: none; font-size: 16px; cursor: pointer; color: #9ca3af; }
+  .reply-footer button.icon:hover { color: #374151; }
+  .send-wrap { margin-left: auto; display: flex; }
+  .btn-send { background: #2563eb; color: #fff; border: none; padding: 0 16px; height: 30px; border-radius: 6px 0 0 6px; font-size: 12.5px; font-weight: 500; cursor: pointer; }
+  .btn-send:hover { background: #1d4ed8; }
+  .btn-send-arrow { background: #1d4ed8; color: #fff; border: none; padding: 0 8px; height: 30px; border-radius: 0 6px 6px 0; cursor: pointer; border-left: 1px solid rgba(255,255,255,.3); }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    width: 280px;
+    background: #fff;
+    border-left: 1px solid #e5e7eb;
+    overflow-y: auto;
+    flex-shrink: 0;
+    padding: 14px 16px;
+  }
+
+  .panel-section { margin-bottom: 20px; }
+  .panel-section-title {
+    font-size: 12px; font-weight: 700; color: #111827;
+    margin-bottom: 10px;
+  }
+
+  .prop-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .prop-label { font-size: 11.5px; color: #6b7280; }
+  .prop-value {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: #111827; font-weight: 500;
+  }
+  .prop-select {
+    display: flex; align-items: center; gap: 4px;
+    border: 1px solid #e5e7eb; border-radius: 5px;
+    padding: 3px 8px; font-size: 11.5px; cursor: pointer;
+    background: #fff; color: #374151; min-width: 110px; justify-content: space-between;
+  }
+  .prop-select:hover { border-color: #93c5fd; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot.green { background: #10b981; }
+  .dot.red   { background: #ef4444; }
+  .dot.orange{ background: #f97316; }
+
+  .assign-link { font-size: 11px; color: #2563eb; cursor: pointer; text-decoration: none; }
+  .assign-link:hover { text-decoration: underline; }
+
+  .agent-select {
+    display: flex; align-items: center; gap: 6px;
+    border: 1px solid #e5e7eb; border-radius: 5px;
+    padding: 4px 8px; font-size: 11.5px; cursor: pointer;
+    background: #fff; color: #374151; width: 100%;
+  }
+  .agent-select-av {
+    width: 20px; height: 20px; border-radius: 50%; background: #6366f1;
+    color: #fff; font-size: 8px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* SLA */
+  .sla-row { margin-bottom: 8px; }
+  .sla-label { font-size: 11px; color: #6b7280; margin-bottom: 3px; }
+  .sla-value { font-size: 12px; font-weight: 600; color: #111827; }
+  .sla-bar { height: 5px; border-radius: 3px; background: #e5e7eb; margin-top: 3px; overflow: hidden; }
+  .sla-fill { height: 100%; border-radius: 3px; }
+  .sla-fill.green { background: #10b981; }
+  .sla-fill.amber { background: #f59e0b; }
+  .sla-status-badge {
+    display: inline-flex; align-items: center;
+    background: #dcfce7; color: #15803d;
+    font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 10px;
+  }
+
+  /* tags */
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag {
+    background: #f3f4f6; color: #374151; font-size: 11px;
+    padding: 2px 9px; border-radius: 10px; cursor: pointer;
+  }
+  .tag:hover { background: #e0e7ff; color: #3730a3; }
+  .tag.blue { background: #dbeafe; color: #1d4ed8; }
+  .tag.green2 { background: #dcfce7; color: #15803d; }
+  .tag-add { background: none; border: 1px dashed #d1d5db; color: #9ca3af; font-size: 14px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .tag-add:hover { border-color: #93c5fd; color: #3b82f6; }
+
+  /* more info */
+  .more-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .more-label { font-size: 11.5px; color: #6b7280; }
+  .more-value { font-size: 11.5px; color: #111827; font-weight: 500; }
+
+  /* divider */
+  .divider { height: 1px; background: #f3f4f6; margin: 14px 0; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1100px) {
+    .right-panel { width: 240px; }
+    .sidebar { width: 175px; }
+  }
+  @media (max-width: 860px) {
+    .sidebar { display: none; }
+    .right-panel { display: none; }
+  }
 </style>
 </head>
 <body>
 
-<!-- GLOBAL TOP BAR -->
-<header class="topbar">
-  <div class="topbar-search">
-    <i class="fa-solid fa-magnifying-glass"></i>
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="search-wrap">
     <input type="text" placeholder="Search tickets, users, solutions..." />
+    <span class="slash">/</span>
   </div>
-  <div class="topbar-spacer"></div>
-  <button class="topbar-btn"><i class="fa-solid fa-plus" style="font-size:10px;"></i> New</button>
-  <div class="topbar-icons">
-    <div class="notif"><i class="fa-regular fa-bell"></i><span class="dot"></span></div>
-    <i class="fa-regular fa-comment-dots"></i>
-    <i class="fa-regular fa-clock"></i>
-    <i class="fa-solid fa-gear"></i>
-    <div class="av av-blue">HM</div>
+  <div class="spacer"></div>
+  <button class="btn-new">&#65291; New</button>
+  <div class="icon-btn">
+    🔔<span class="badge">12</span>
   </div>
-</header>
+  <div class="icon-btn">💬</div>
+  <div class="icon-btn">❓</div>
+  <div class="icon-btn">⚙️</div>
+  <div class="avatar">HM</div>
+</nav>
 
-<!-- BODY -->
-<div class="body-wrap">
+<div class="app-body">
 
   <!-- LEFT SIDEBAR -->
   <aside class="sidebar">
-    <div style="padding:10px 14px;border-bottom:1px solid var(--border);">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-size:13px;font-weight:600;">All Tickets</span>
-        <i class="fa-solid fa-sliders" style="font-size:12px;color:var(--hint);cursor:pointer;"></i>
+    <div class="sidebar-section">
+      <div class="sidebar-item active">
+        <span>All Tickets ▾</span>
       </div>
     </div>
 
-    <div style="padding:6px 0;">
-      <div class="nav-section">Queues</div>
-      <div class="nav-item">New Tickets <span class="cnt">16</span></div>
-      <div class="nav-item active">Open Tickets <span class="cnt" style="background:var(--accent-l);color:var(--accent);">32</span></div>
-      <div class="nav-item">Pending - Customer <span class="cnt">30</span></div>
-      <div class="nav-item">Assigned To Me <span class="cnt">14</span></div>
-      <div class="nav-item">Escalated <span class="cnt">04</span></div>
-      <div class="nav-item">Overdue <span class="cnt red">09</span></div>
-      <div class="nav-item">Closed <span class="cnt">150</span></div>
-      <div class="nav-item">Reopened <span class="cnt">03</span></div>
-      <div class="nav-item">Trash <span class="cnt">02</span></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Queues</div>
+      <div class="sidebar-item">New Tickets <span class="sidebar-count">15</span></div>
+      <div class="sidebar-item">Open Tickets <span class="sidebar-count">32</span></div>
+      <div class="sidebar-item">Pending - Customer <span class="sidebar-count">18</span></div>
+      <div class="sidebar-item">Assigned To Me <span class="sidebar-count">07</span></div>
+      <div class="sidebar-item">Escalated <span class="sidebar-count">04</span></div>
+      <div class="sidebar-item overdue">Overdue <span class="sidebar-count">09</span></div>
+      <div class="sidebar-item">Closed <span class="sidebar-count">120</span></div>
+      <div class="sidebar-item">Reopened <span class="sidebar-count">03</span></div>
+      <div class="sidebar-item">Trash <span class="sidebar-count">02</span></div>
+    </div>
 
-      <div class="nav-section" style="margin-top:6px;">Views</div>
-      <div class="nav-item">High Priority Tickets</div>
-      <div class="nav-item">Unassigned Tickets</div>
-      <div class="nav-item">Due Today</div>
-      <div class="nav-item">SLA Breached</div>
-      <div class="nav-item">My Team Tickets</div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Views</div>
+      <div class="sidebar-item">High Priority Tickets</div>
+      <div class="sidebar-item">Unassigned Tickets</div>
+      <div class="sidebar-item">Due Today</div>
+      <div class="sidebar-item">SLA Breached</div>
+      <div class="sidebar-item">My Team Tickets</div>
+    </div>
 
-      <div class="nav-section" style="margin-top:6px;">Agents</div>
-      <div class="agent-row"><div class="agent-info"><div class="av av-blue" style="width:26px;height:26px;font-size:10px;">HM</div>Hasan Mahmud</div><span class="cnt">12</span></div>
-      <div class="agent-row"><div class="agent-info"><div class="av av-green" style="width:26px;height:26px;font-size:10px;">RH</div>Rakib Hasan</div><span class="cnt">08</span></div>
-      <div class="agent-row"><div class="agent-info"><div class="av av-orange" style="width:26px;height:26px;font-size:10px;">JF</div>Jannatul Ferdous</div><span class="cnt red">05</span></div>
-      <div class="agent-row"><div class="agent-info"><div class="av av-purple" style="width:26px;height:26px;font-size:10px;">NJ</div>Nusrat Jahan</div><span class="cnt">09</span></div>
-      <div class="add-agent"><i class="fa-solid fa-plus" style="font-size:10px;"></i> Add Agent</div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Agents</div>
+      <div class="agent-item">
+        <div class="agent-av">HM</div>
+        <span class="agent-name">Hasan Mahmud</span>
+        <span class="agent-count">12</span>
+      </div>
+      <div class="agent-item">
+        <div class="agent-av green">RH</div>
+        <span class="agent-name">Rakib Hasan</span>
+        <span class="agent-count">08</span>
+      </div>
+      <div class="agent-item">
+        <div class="agent-av amber">JF</div>
+        <span class="agent-name">Jannatul Ferdous</span>
+        <span class="agent-count">05</span>
+      </div>
+      <div class="agent-item">
+        <div class="agent-av rose">NJ</div>
+        <span class="agent-name">Nusrat Jahan</span>
+        <span class="agent-count">09</span>
+      </div>
+      <div class="add-agent-btn">&#65291; Add Agent</div>
     </div>
   </aside>
 
   <!-- MAIN -->
-  <div class="main">
+  <div class="main-content">
 
-    <!-- TICKET NAV -->
-    <div class="ticket-nav">
-      <button class="btn-back"><i class="fa-solid fa-arrow-left" style="font-size:10px;"></i> Back</button>
-      <span class="tkt-id">TKT-101</span>
-      <span class="badge badge-red"><i class="fa-solid fa-circle" style="font-size:7px;"></i> High Priority</span>
-      <div style="flex:1"></div>
-      <button class="btn">Edit</button>
-      <button class="btn">More <i class="fa-solid fa-chevron-down" style="font-size:9px;"></i></button>
-      <div class="btn-split">
-        <button class="mp"><i class="fa-solid fa-reply" style="font-size:10px;margin-right:4px;"></i>Reply</button>
-        <button class="ap"><i class="fa-solid fa-chevron-down"></i></button>
+    <!-- TICKET HEADER -->
+    <div class="ticket-header">
+      <div class="ticket-breadcrumb">
+        <button class="btn-back">&#8592; Back</button>
+        <span class="ticket-id">TKT-101</span>
+        <span class="priority-badge">High Priority</span>
+      </div>
+      <div class="ticket-title">Cannot Login ERP</div>
+      <div class="ticket-meta">
+        <span>
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/></svg>
+          ABC Garments Ltd.
+        </span>
+        <span>
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+          John Smith
+        </span>
+        <span>
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
+          john.smith@abc.com
+        </span>
+        <span>
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.09 4.18 2 2 0 0 1 5.07 2h3a2 2 0 0 1 2 1.72c.13 1 .37 1.97.72 2.9a2 2 0 0 1-.45 2.11L9.09 9.91a16 16 0 0 0 6 6l1.18-1.18a2 2 0 0 1 2.11-.45c.93.35 1.9.59 2.9.72A2 2 0 0 1 23 17z"/></svg>
+          +8801712345678
+        </span>
+      </div>
+      <div class="ticket-actions">
+        <button class="btn btn-outline">Edit</button>
+        <button class="btn btn-outline">More ▾</button>
+        <div class="btn-split">
+          <button class="btn btn-primary main">Reply</button>
+          <button class="btn btn-primary arrow">&#9660;</button>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active">Details</div>
+        <div class="tab">Conversations <span class="cnt">3</span></div>
+        <div class="tab">Activity</div>
+        <div class="tab">Attachments <span class="cnt">2</span></div>
+        <div class="tab">Related Tickets <span class="cnt">1</span></div>
+        <div class="tab">Tasks <span class="cnt">1</span></div>
+        <div class="tab">Approvals</div>
       </div>
     </div>
 
-    <!-- CENTER SCROLLABLE -->
-    <div class="center">
+    <!-- TICKET BODY -->
+    <div class="ticket-body">
+      <div class="ticket-main">
 
-      <!-- TICKET HEADER -->
-      <div class="ticket-hdr">
-        <div class="ticket-title">Cannot Login ERP</div>
-        <div class="ticket-meta">
-          <div class="meta-item"><i class="fa-regular fa-building"></i> ABC Garments Ltd.</div>
-          <div class="meta-item"><i class="fa-regular fa-user"></i> John Smith</div>
-          <div class="meta-item"><i class="fa-regular fa-envelope"></i> john.smith@abc.com</div>
-          <div class="meta-item"><i class="fa-solid fa-phone"></i> +8801712345678</div>
-        </div>
-      </div>
-
-      <!-- TABS CARD -->
-      <div class="card">
-        <div class="tabs">
-          <div class="tab active">Details</div>
-          <div class="tab">Conversations <span class="tab-c">3</span></div>
-          <div class="tab">Activity</div>
-          <div class="tab">Attachments <span class="tab-c">2</span></div>
-          <div class="tab">Related Tickets <span class="tab-c">1</span></div>
-          <div class="tab">Tasks <span class="tab-c">1</span></div>
-          <div class="tab">Approvals</div>
-        </div>
-
-        <div class="card-body">
-          <!-- Customer Info -->
-          <div class="info-wrap">
-            <div style="flex:1">
-              <div class="section-label">Customer Information</div>
+        <!-- Customer Info -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div style="flex:1;">
+              <div class="card-title">Customer Information</div>
               <div class="info-grid">
-                <div class="info-row"><span class="info-lbl">Company</span><span class="info-val">ABC Garments Ltd.</span></div>
-                <div class="info-row"><span class="info-lbl">Department</span><span class="info-val">Accounts</span></div>
-                <div class="info-row"><span class="info-lbl">Contact Person</span><span class="info-val">John Smith</span></div>
-                <div class="info-row"><span class="info-lbl">Location</span><span class="info-val">Head Office</span></div>
-                <div class="info-row"><span class="info-lbl">Email</span><span class="info-val" style="color:var(--accent)">john.smith@abc.com</span></div>
-                <div class="info-row"><span class="info-lbl">Asset / System</span><span class="info-val">ERP Application</span></div>
-                <div class="info-row"><span class="info-lbl">Phone</span><span class="info-val">+8801712345678</span></div>
-                <div class="info-row"><span class="info-lbl">Version</span><span class="info-val">ERP v2.5.1</span></div>
-                <div class="info-row"><span class="info-lbl">Customer ID</span><span class="info-val">CUST-000124</span></div>
-                <div class="info-row"><span class="info-lbl">Support Type</span><span class="info-val">Software</span></div>
-                <div class="info-row"><span class="info-lbl">Contract</span><span class="info-val">Enterprise Support Plan</span></div>
-                <div class="info-row"><span class="info-lbl">Customer Priority</span><span class="info-val"><span class="badge badge-red" style="font-size:11px;">High</span></span></div>
-                <div class="info-row"><span class="info-lbl">Valid Till</span><span class="info-val">31 Dec 2026</span></div>
+                <div class="info-cell"><label>Company</label><span>ABC Garments Ltd.</span></div>
+                <div class="info-cell"><label>Department</label><span>Accounts</span></div>
+                <div class="info-cell"><label>Asset / System</label><span>ERP Application</span></div>
+                <div class="info-cell" style="grid-row:1; grid-column:4; display:flex; justify-content:flex-end;">
+                  <div class="cust-av">JS</div>
+                </div>
+
+                <div class="info-cell"><label>Contact Person</label><span>John Smith</span></div>
+                <div class="info-cell"><label>Location</label><span>Head Office</span></div>
+                <div class="info-cell"><label>Version</label><span>ERP v2 5.1</span></div>
+
+                <div class="info-cell"><label>Email</label><span>john.smith@abc.com</span></div>
+                <div class="info-cell"><label>Customer ID</label><span>CUST-000124</span></div>
+                <div class="info-cell"><label>Support Type</label><span>Software</span></div>
+
+                <div class="info-cell"><label>Phone</label><span>+8801712345678</span></div>
+                <div class="info-cell"><label>Contract</label><span>Enterprise Support Plan</span></div>
+                <div class="info-cell"><label>Customer Priority</label>
+                  <span><span class="customer-priority">High</span></span>
+                </div>
+
+                <div class="info-cell"><label>Valid Till</label><span>31 Dec 2026</span></div>
               </div>
             </div>
-            <div class="av av-xl av-green" style="margin-top:22px;">JS</div>
           </div>
+        </div>
 
-          <hr class="divider">
+        <!-- Description -->
+        <div class="card">
+          <div class="card-title">Description</div>
+          <p class="desc-text">
+            User John Smith is unable to login to the ERP system. After entering valid username and password,
+            the system shows error "Invalid Credentials".<br/>
+            This is blocking daily work in Accounts department.
+          </p>
+        </div>
 
-          <!-- Description -->
-          <div class="section-label">Description</div>
-          <p style="font-size:12.5px;color:var(--muted);line-height:1.7;">User John Smith is unable to login to the ERP system. After entering valid username and password, the system shows error "Invalid Credentials".<br>This is blocking daily work in Accounts department.</p>
-
-          <hr class="divider">
-
-          <!-- Attachments -->
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-            <div class="section-label" style="margin:0;">Attachments (2)</div>
-            <div style="display:flex;gap:10px;">
-              <i class="fa-solid fa-download" style="color:var(--hint);cursor:pointer;font-size:13px;"></i>
-              <i class="fa-solid fa-ellipsis" style="color:var(--hint);cursor:pointer;font-size:13px;"></i>
-            </div>
-          </div>
-          <div class="att-grid">
-            <div class="att-item">
-              <div class="att-icon att-img"><i class="fa-regular fa-image"></i></div>
-              <div><div class="att-name">login_error.png</div><div class="att-size">125 KB</div></div>
-            </div>
-            <div class="att-item">
-              <div class="att-icon att-doc"><i class="fa-regular fa-file-lines"></i></div>
-              <div><div class="att-name">error_log.txt</div><div class="att-size">8 KB</div></div>
-            </div>
-          </div>
-
-          <hr class="divider">
-
-          <!-- Conversations -->
-          <div class="conv-toolbar">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <div class="section-label" style="margin:0;">Conversations</div>
-              <div class="conv-filters">
-                <button class="cf-btn active">All 3</button>
-                <button class="cf-btn">Public 2</button>
-                <button class="cf-btn">Internal 1</button>
-              </div>
-            </div>
+        <!-- Attachments -->
+        <div class="card">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+            <div class="card-title" style="margin:0;">Attachments (2)</div>
             <div style="display:flex;gap:8px;">
-              <button class="btn" style="font-size:11.5px;padding:4px 10px;">Add Internal Note</button>
-              <button class="btn btn-primary" style="font-size:11.5px;padding:4px 10px;">Reply to Customer</button>
+              <button style="background:none;border:none;font-size:16px;cursor:pointer;color:#6b7280;">⬇</button>
+              <button style="background:none;border:none;font-size:16px;cursor:pointer;color:#6b7280;">•••</button>
+            </div>
+          </div>
+          <div class="attachments-row">
+            <div class="attachment-item">
+              <div class="attach-icon img">🖼</div>
+              <div class="attach-info">
+                <div class="name">login_error.png</div>
+                <div class="size">125 KB</div>
+              </div>
+            </div>
+            <div class="attachment-item">
+              <div class="attach-icon txt">📄</div>
+              <div class="attach-info">
+                <div class="name">error_log.txt</div>
+                <div class="size">8 KB</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conversations -->
+        <div class="card">
+          <div class="conv-tabs">
+            <span class="conv-tab active">All <span>3</span></span>
+            <span class="conv-tab">Public <span>2</span></span>
+            <span class="conv-tab">Internal <span>1</span></span>
+            <div class="conv-actions">
+              <button class="conv-action-btn">Add Internal Note</button>
+              <button class="conv-action-btn">Reply to Customer</button>
             </div>
           </div>
 
+          <!-- msg 1 -->
           <div class="conv-msg">
-            <div class="av av-green">JS</div>
-            <div class="conv-body">
-              <div class="conv-meta">
+            <div class="av" style="background:#10b981;">JS</div>
+            <div style="flex:1;">
+              <div class="conv-header">
                 <span class="conv-name">John Smith (Customer)</span>
-                <span class="src src-pub">Public</span>
+                <span class="conv-role-badge badge-public">PUBLIC</span>
                 <span class="conv-time">10 Jun 2026, 10:15 AM</span>
               </div>
-              <div class="conv-text">I have reset my password but still same issue.</div>
+              <div class="conv-body">I have reset my password but still same issue.</div>
             </div>
           </div>
 
+          <!-- msg 2 -->
           <div class="conv-msg">
-            <div class="av av-blue">HM</div>
-            <div class="conv-body">
-              <div class="conv-meta">
+            <div class="av agent-av2">HM</div>
+            <div style="flex:1;">
+              <div class="conv-header">
                 <span class="conv-name">Hasan Mahmud (Agent)</span>
-                <span class="src src-int">Internal</span>
+                <span class="conv-role-badge badge-internal">INTERNAL</span>
                 <span class="conv-time">10 Jun 2026, 10:20 AM</span>
               </div>
-              <div class="conv-text">We are checking the issue. Please try after 15 minutes and confirm.</div>
+              <div class="conv-body">We are checking the issue. Please try after 15 minutes and confirm.</div>
             </div>
           </div>
 
+          <!-- msg 3 system -->
           <div class="conv-msg">
-            <div class="sys-av"><i class="fa-solid fa-gear" style="font-size:12px;"></i></div>
-            <div class="conv-body">
-              <div class="conv-meta">
+            <div class="av sys-av" style="background:#9ca3af; font-size:9px; font-weight:700;">SYS</div>
+            <div style="flex:1;">
+              <div class="conv-header">
                 <span class="conv-name">System</span>
-                <span class="src src-sys">System</span>
+                <span class="conv-role-badge badge-system">SYSTEM</span>
                 <span class="conv-time">10 Jun 2026, 10:10 AM</span>
               </div>
-              <div class="conv-text">Ticket created by John Smith via Portal</div>
+              <div class="conv-body">Ticket created by John Smith via Portal</div>
+            </div>
+          </div>
+
+          <!-- reply box -->
+          <div class="reply-tabs">
+            <div class="reply-tab active">Public Reply</div>
+            <div class="reply-tab">Internal Note</div>
+          </div>
+          <div class="reply-box">
+            <textarea class="reply-input" placeholder="Type your reply here..."></textarea>
+            <div class="reply-footer">
+              <div class="icon-actions">
+                <button class="icon">📎</button>
+                <button class="icon">😊</button>
+              </div>
+              <div class="send-wrap">
+                <button class="btn-send">Send</button>
+                <button class="btn-send-arrow">&#9660;</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- REPLY BOX -->
-      <div class="reply-box">
-        <div class="reply-tabs">
-          <div class="reply-tab active">Public Reply</div>
-          <div class="reply-tab">Internal Note</div>
-        </div>
-        <textarea class="reply-input" placeholder="Type your reply here..."></textarea>
-        <div class="reply-footer">
-          <div class="reply-tools">
-            <i class="fa-solid fa-paperclip"></i>
-            <i class="fa-regular fa-face-smile"></i>
+      </div><!-- /ticket-main -->
+
+      <!-- RIGHT PANEL -->
+      <aside class="right-panel">
+
+        <!-- Ticket Properties -->
+        <div class="panel-section">
+          <div class="panel-section-title">Ticket Properties</div>
+
+          <div class="prop-row">
+            <span class="prop-label">Status</span>
+            <div class="prop-select"><span style="display:flex;align-items:center;gap:5px;"><span class="dot green"></span> Open</span> ▾</div>
           </div>
-          <div class="btn-split">
-            <button class="mp">Send</button>
-            <button class="ap"><i class="fa-solid fa-chevron-down"></i></button>
+          <div class="prop-row">
+            <span class="prop-label">Priority</span>
+            <div class="prop-select"><span style="display:flex;align-items:center;gap:5px;"><span class="dot red"></span> High</span> ▾</div>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Category</span>
+            <div class="prop-select">Software ▾</div>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Sub Category</span>
+            <div class="prop-select">Login Issue ▾</div>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Item</span>
+            <div class="prop-select">ERP Application ▾</div>
           </div>
         </div>
-      </div>
 
-    </div><!-- /center -->
-  </div><!-- /main -->
+        <div class="divider"></div>
 
-  <!-- RIGHT PANEL -->
-  <aside class="right">
-    <div class="rp-hdr">Ticket Properties</div>
-
-    <div class="rp-sec">
-      <div class="rp-row">
-        <span class="rp-label">Status</span>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <i class="fa-solid fa-circle" style="font-size:8px;color:var(--green);"></i>
-          <select class="rp-sel"><option>Open</option><option>Pending</option><option>Closed</option></select>
+        <!-- Assignment -->
+        <div class="panel-section">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div class="panel-section-title" style="margin:0;">Assignment</div>
+            <a class="assign-link">Assign To Me</a>
+          </div>
+          <div class="prop-row">
+            <span class="prop-label">Team</span>
+            <div class="prop-select">Application Support ▾</div>
+          </div>
+          <div class="prop-row" style="align-items:flex-start; flex-direction:column; gap:4px;">
+            <span class="prop-label">Agent</span>
+            <div class="agent-select" style="margin-top:4px;">
+              <div class="agent-select-av">HM</div>
+              <span style="flex:1; font-size:12px;">Hasan Mahmud</span>
+              <span style="font-size:11px; color:#9ca3af;">▾</span>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="rp-row">
-        <span class="rp-label">Priority</span>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <i class="fa-solid fa-circle" style="font-size:8px;color:var(--red);"></i>
-          <select class="rp-sel"><option>High</option><option>Medium</option><option>Low</option><option>Critical</option></select>
+
+        <div class="divider"></div>
+
+        <!-- SLA Information -->
+        <div class="panel-section">
+          <div class="panel-section-title">SLA Information</div>
+
+          <div class="prop-row">
+            <span class="prop-label">SLA Policy</span>
+            <span style="font-size:11.5px;font-weight:600;color:#111827;">High Priority SLA</span>
+          </div>
+
+          <div class="sla-row">
+            <div class="sla-label">Response Time</div>
+            <div class="sla-value">30m</div>
+          </div>
+
+          <div class="sla-row">
+            <div class="sla-label">Time to First Response</div>
+            <div class="sla-value" style="color:#10b981;">15m 20s</div>
+            <div class="sla-bar"><div class="sla-fill green" style="width:55%;"></div></div>
+          </div>
+
+          <div class="sla-row">
+            <div class="sla-label">Resolution Time</div>
+            <div class="sla-value">4h</div>
+          </div>
+
+          <div class="sla-row">
+            <div class="sla-label">Time to Resolution</div>
+            <div class="sla-value" style="color:#f59e0b;">2h 45m</div>
+            <div class="sla-bar"><div class="sla-fill amber" style="width:70%;"></div></div>
+          </div>
+
+          <div class="prop-row" style="margin-top:8px;">
+            <span class="prop-label">SLA Status</span>
+            <span class="sla-status-badge">Within SLA</span>
+          </div>
+
+          <div class="prop-row">
+            <span class="prop-label">Due Date</span>
+            <span style="font-size:11.5px;color:#111827;font-weight:500;">10 Jun 2026, 02:10 PM</span>
+          </div>
         </div>
-      </div>
-      <div class="rp-row"><span class="rp-label">Category</span><select class="rp-sel"><option>Software</option><option>Hardware</option></select></div>
-      <div class="rp-row"><span class="rp-label">Sub Category</span><select class="rp-sel"><option>Login Issue</option><option>Performance</option></select></div>
-      <div class="rp-row"><span class="rp-label">Item</span><select class="rp-sel"><option>ERP Application</option><option>Email</option></select></div>
-    </div>
 
-    <div class="rp-sec">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <span class="rp-title" style="margin:0;">Assignment</span>
-        <span class="assign-me">Assign To Me</span>
-      </div>
-      <div class="rp-row"><span class="rp-label">Team</span><select class="rp-sel"><option>Application Support</option><option>Network Team</option></select></div>
-      <div class="rp-row" style="margin-top:6px;">
-        <span class="rp-label">Agent</span>
-        <div style="display:flex;align-items:center;gap:5px;">
-          <div class="av av-blue" style="width:22px;height:22px;font-size:9px;">HM</div>
-          <select class="rp-sel"><option>Hasan Mahmud</option><option>Rakib Hasan</option></select>
+        <div class="divider"></div>
+
+        <!-- Tags -->
+        <div class="panel-section">
+          <div class="panel-section-title">Tags</div>
+          <div class="tags-wrap">
+            <span class="tag">erp</span>
+            <span class="tag blue">login</span>
+            <span class="tag">accounts</span>
+            <span class="tag green2">high-priority</span>
+            <button class="tag-add">+</button>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="rp-sec">
-      <div class="rp-title">SLA Information</div>
-      <div class="rp-row"><span class="rp-label">SLA Policy</span><span class="rp-val">High Priority SLA</span></div>
-      <div class="rp-row"><span class="rp-label">Response Time</span><span class="rp-val">30m</span></div>
+        <div class="divider"></div>
 
-      <div class="sla-item" style="margin-top:8px;">
-        <div class="sla-hdr">
-          <span class="rp-label">Time to First Response</span>
-          <span class="sla-time green">15m 20s</span>
+        <!-- More Information -->
+        <div class="panel-section">
+          <div class="panel-section-title">More Information</div>
+          <div class="more-row"><span class="more-label">Source</span><span class="more-value">Portal</span></div>
+          <div class="more-row"><span class="more-label">Created By</span><span class="more-value">John Smith</span></div>
+          <div class="more-row"><span class="more-label">Created Time</span><span class="more-value">10 Jun 2026, 10:10 AM</span></div>
+          <div class="more-row"><span class="more-label">Last Updated</span><span class="more-value">10 Jun 2026, 10:20 AM</span></div>
+          <div class="more-row"><span class="more-label">Ticket Type</span><span class="more-value">Incident</span></div>
+          <div class="more-row"><span class="more-label">Impact</span><span class="more-value">High</span></div>
+          <div class="more-row"><span class="more-label">Urgency</span><span class="more-value">High</span></div>
+          <div class="more-row"><span class="more-label">Is Billable</span><span class="more-value">No</span></div>
         </div>
-        <div class="sla-bar"><div class="sla-fill fill-green" style="width:72%;"></div></div>
-      </div>
 
-      <div class="rp-row"><span class="rp-label">Resolution Time</span><span class="rp-val">4h</span></div>
+      </aside>
+    </div><!-- /ticket-body -->
 
-      <div class="sla-item" style="margin-top:4px;">
-        <div class="sla-hdr">
-          <span class="rp-label">Time to Resolution</span>
-          <span class="sla-time orange">2h 45m</span>
-        </div>
-        <div class="sla-bar"><div class="sla-fill fill-orange" style="width:55%;"></div></div>
-      </div>
+  </div><!-- /main-content -->
+</div><!-- /app-body -->
 
-      <div class="rp-row" style="margin-top:6px;">
-        <span class="rp-label">SLA Status</span>
-        <span class="badge badge-green" style="font-size:11px;">Within SLA</span>
-      </div>
-      <div class="rp-row">
-        <span class="rp-label">Due Date</span>
-        <span class="rp-val" style="font-size:11px;">10 Jun 2026, 02:10 PM</span>
-      </div>
-    </div>
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      this.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
 
-    <div class="rp-sec">
-      <div class="rp-title">Tags</div>
-      <div class="tags-wrap">
-        <span class="tag">erp</span>
-        <span class="tag">login</span>
-        <span class="tag">accounts</span>
-        <span class="tag">high-priority</span>
-        <span class="tag-add">+</span>
-      </div>
-    </div>
+  document.querySelectorAll('.conv-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      this.closest('.conv-tabs').querySelectorAll('.conv-tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
 
-    <div class="rp-sec">
-      <div class="rp-title">More Information</div>
-      <div class="more-row"><span class="more-lbl">Source</span><span class="more-val">Portal</span></div>
-      <div class="more-row"><span class="more-lbl">Created By</span><span class="more-val">John Smith</span></div>
-      <div class="more-row"><span class="more-lbl">Created Time</span><span class="more-val">10 Jun 2026, 10:10 AM</span></div>
-      <div class="more-row"><span class="more-lbl">Last Updated</span><span class="more-val">10 Jun 2026, 10:20 AM</span></div>
-      <div class="more-row"><span class="more-lbl">Ticket Type</span><span class="more-val">Incident</span></div>
-      <div class="more-row"><span class="more-lbl">Impact</span><span class="more-val">High</span></div>
-      <div class="more-row"><span class="more-lbl">Urgency</span><span class="more-val">High</span></div>
-      <div class="more-row"><span class="more-lbl">Is Billable</span><span class="more-val">No</span></div>
-    </div>
-  </aside>
+  document.querySelectorAll('.reply-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      this.closest('.reply-tabs').querySelectorAll('.reply-tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
 
-</div><!-- /body-wrap -->
+  // Sidebar items
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', function() {
+      document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
 </body>
 </html>
