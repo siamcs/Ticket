@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Tickets</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --border: #e2e5ea;
+    --text-primary: #1a1f36;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --accent: #3b82f6;
+    --accent-light: #eff6ff;
+    --sidebar: 220px;
+    --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  body { font-family: var(--font); background: var(--bg); color: var(--text-primary); font-size: 13px; display: flex; height: 100vh; overflow: hidden; }
+
+  /* SIDEBAR */
+  .sidebar { width: var(--sidebar); background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto; }
+  .sidebar-top { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .sidebar-top span { font-weight: 700; font-size: 15px; }
+  .btn-new { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 6px 13px; font-size: 12px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .search-wrap { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .search-wrap input { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px 6px 28px; font-size: 12px; background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 9px center; outline: none; color: var(--text-secondary); }
+  .nav-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; cursor: pointer; color: var(--text-secondary); font-size: 13px; border-left: 2px solid transparent; transition: background 0.12s; }
+  .nav-item:hover { background: #f8f9fb; }
+  .nav-item.active { color: var(--accent); background: var(--accent-light); border-left-color: var(--accent); font-weight: 500; }
+  .nav-item span.cnt { font-size: 11px; background: #f1f3f5; color: var(--text-secondary); padding: 1px 7px; border-radius: 10px; }
+  .nav-item.active span.cnt { background: var(--accent-light); color: var(--accent); }
+  .nav-section { padding: 14px 16px 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+
+  /* MAIN */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .main-header { padding: 14px 20px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .main-header-title { font-size: 15px; font-weight: 600; }
+  .btn-filter { display: flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: var(--surface); border-radius: 6px; padding: 6px 12px; font-size: 12px; color: var(--text-secondary); cursor: pointer; }
+  .btn-filter:hover { background: var(--bg); }
+
+  /* TABLE AREA */
+  .table-area { flex: 1; overflow-y: auto; padding: 16px 20px; }
+  .table-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .tickets-count { font-size: 12px; color: var(--text-muted); }
+  .pagination { display: flex; align-items: center; gap: 4px; }
+  .pg-btn { width: 26px; height: 26px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); }
+  .pg-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .pg-btn:hover:not(.active) { background: var(--bg); }
+
+  /* TABLE */
+  .ticket-table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+  .ticket-table thead tr { border-bottom: 1px solid var(--border); }
+  .ticket-table th { padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); background: #fafbfc; white-space: nowrap; }
+  .ticket-table th:first-child, .ticket-table td:first-child { width: 36px; padding-left: 16px; }
+  .ticket-table tbody tr { border-bottom: 1px solid #f3f4f6; transition: background 0.1s; cursor: pointer; }
+  .ticket-table tbody tr:last-child { border-bottom: none; }
+  .ticket-table tbody tr:hover { background: #f8f9ff; }
+  .ticket-table td { padding: 11px 12px; vertical-align: middle; }
+  input[type=checkbox] { width: 14px; height: 14px; accent-color: var(--accent); cursor: pointer; }
+
+  /* REQUESTER CELL */
+  .requester { display: flex; align-items: center; gap: 9px; }
+  .av { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .av-blue   { background: #dbeafe; color: #1d4ed8; }
+  .av-green  { background: #d1fae5; color: #065f46; }
+  .av-orange { background: #fed7aa; color: #c2410c; }
+  .av-purple { background: #ede9fe; color: #6d28d9; }
+  .av-pink   { background: #fce7f3; color: #9d174d; }
+  .av-teal   { background: #ccfbf1; color: #0f766e; }
+  .av-red    { background: #fee2e2; color: #b91c1c; }
+  .av-yellow { background: #fef9c3; color: #854d0e; }
+  .req-name  { font-size: 13px; font-weight: 500; color: var(--text-primary); line-height: 1.3; }
+  .req-email { font-size: 11px; color: var(--text-muted); }
+
+  /* SUBJECT */
+  .subject-cell { max-width: 260px; }
+  .subject-text { font-size: 13px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ASSIGNEE */
+  .assignee { font-size: 12px; color: var(--text-secondary); }
+
+  /* STATUS BADGE */
+  .badge { display: inline-flex; align-items: center; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+  .badge-open    { background: #d1fae5; color: #065f46; }
+  .badge-closed  { background: #f3f4f6; color: #374151; }
+  .badge-pending { background: #fef9c3; color: #854d0e; }
+  .badge-onhold  { background: #e0e7ff; color: #3730a3; }
+  .badge-solved  { background: #dbeafe; color: #1d4ed8; }
+
+  /* LAST UPDATE */
+  .last-update { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <span>Tickets</span>
+    <button class="btn-new"><i class="fa-solid fa-plus" style="font-size:10px;"></i> New ticket</button>
+  </div>
+  <div class="search-wrap">
+    <input type="text" placeholder="Search all tickets..." />
+  </div>
+
+  <div style="padding:8px 0;">
+    <div class="nav-item active">All tickets</div>
+
+    <div class="nav-section" style="margin-top:6px;">Views</div>
+    <div class="nav-item">Unassigned tickets <span class="cnt">28</span></div>
+    <div class="nav-item">My open tickets <span class="cnt">14</span></div>
+
+    <div class="nav-section" style="margin-top:6px;">Status</div>
+    <div class="nav-item">Open <span class="cnt">60</span></div>
+    <div class="nav-item">Pending <span class="cnt">32</span></div>
+    <div class="nav-item">On hold <span class="cnt">11</span></div>
+    <div class="nav-item">Solved <span class="cnt">803</span></div>
+    <div class="nav-item">Closed <span class="cnt">230</span></div>
+    <div class="nav-item">Reopened <span class="cnt">20</span></div>
+     <div class="nav-item">Resolved <span class="cnt">23</span></div>
+    <div class="nav-section" style="margin-top:6px;">Other</div>
+    <div class="nav-item">Spam <span class="cnt">4</span></div>
+    
+    <div class="nav-item">Trash <span class="cnt">7</span></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="main-header">
+    <span class="main-header-title">All tickets</span>
+    <button class="btn-filter"><i class="fa-solid fa-sliders" style="font-size:11px;"></i> + Add filter</button>
+  </div>
+
+  <div class="table-area">
+    <div class="table-toolbar">
+      <span class="tickets-count">1,465 tickets</span>
+      <div class="pagination">
+        <button class="pg-btn"><i class="fa-solid fa-chevron-left" style="font-size:9px;"></i></button>
+        <button class="pg-btn active">1</button>
+        <button class="pg-btn">2</button>
+        <button class="pg-btn">3</button>
+        <span style="font-size:11px;color:var(--text-muted);padding:0 4px;">…</span>
+        <button class="pg-btn">14</button>
+        <button class="pg-btn"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i></button>
+      </div>
+    </div>
+
+    <table class="ticket-table">
+      <thead>
+        <tr>
+          <th><input type="checkbox" /></th>
+          <th>Requester</th>
+          <th>Subject</th>
+          <th>Assignee</th>
+          <th>Status</th>
+          <th>Last Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-orange">BW</div>
+              <div><div class="req-name">Bettina Webb</div><div class="req-email">bettinawebb@gmail.com</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">I-AA-DRRO | Chat follow-up - iOS app issue</div></td>
+          <td><span class="assignee">unassigned</span></td>
+          <td><span class="badge badge-open">Open</span></td>
+          <td><span class="last-update">10 minutes ago</span></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-red">P</div>
+              <div><div class="req-name">Peter</div><div class="req-email">peter....@gmail.com</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">Test</div></td>
+          <td><span class="assignee">agent12</span></td>
+          <td><span class="badge badge-open">Open</span></td>
+          <td><span class="last-update">yesterday</span></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-blue">CB</div>
+              <div><div class="req-name">christie@bluechatline.com</div><div class="req-email">christie@bluechatline.com</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">[Trello - KNOWN ISSUES] Issue with pre...</div></td>
+          <td><span class="assignee">Jason Statham</span></td>
+          <td><span class="badge badge-pending">Pending</span></td>
+          <td><span class="last-update">13 Dec 2018</span></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-purple">E</div>
+              <div><div class="req-name">Emma</div><div class="req-email">user@gmail.com</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">[KK] Bug report - Chat bubble on mobile...</div></td>
+          <td><span class="assignee">Bruce</span></td>
+          <td><span class="badge badge-open">Open</span></td>
+          <td><span class="last-update">11 Dec 2021</span></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-teal">C</div>
+              <div><div class="req-name">Customer</div><div class="req-email">customer@gmail.com</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">DMK - TheBizDrawings setup overlay</div></td>
+          <td><span class="assignee">Pam Beesley</span></td>
+          <td><span class="badge badge-closed">Closed</span></td>
+          <td><span class="last-update">10 Dec 2021</span></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-green">DM</div>
+              <div><div class="req-name">Derrick Mitchell</div><div class="req-email">derrickmitchell@gmail.com</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">Love your content (and a proposal)</div></td>
+          <td><span class="assignee">unassigned</span></td>
+          <td><span class="badge badge-onhold">On Hold</span></td>
+          <td><span class="last-update">02 Dec 2021</span></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-yellow">WG</div>
+              <div><div class="req-name">Wells Greer</div><div class="req-email">user@gmail.com</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">Infinity Telecoms - HelpDesk Case Study</div></td>
+          <td><span class="assignee">unassigned</span></td>
+          <td><span class="badge badge-solved">Solved</span></td>
+          <td><span class="last-update">26 Nov 2021</span></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-orange">DS</div>
+              <div><div class="req-name">Derrick Shelton</div><div class="req-email">derrickshelton@gmail.com</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">E3D Support Customer Satisfaction Sur...</div></td>
+          <td><span class="assignee">Bruce</span></div>
+          <td><span class="badge badge-open">Open</span></td>
+          <td><span class="last-update">24 Nov 2021</span></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-pink">RB</div>
+              <div><div class="req-name">ROBOTJA</div><div class="req-email">user@gmail.com</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">[KK] Logo for license #629348 - agent info...</div></td>
+          <td><span class="assignee">Jason Statham</span></td>
+          <td><span class="badge badge-open">Open</span></td>
+          <td><span class="last-update">22 Nov 2021</span></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-blue">MK</div>
+              <div><div class="req-name">Mark Kowalski</div><div class="req-email">mark.k@company.com</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">API integration failing on production server</div></td>
+          <td><span class="assignee">Pam Beesley</span></td>
+          <td><span class="badge badge-pending">Pending</span></td>
+          <td><span class="last-update">20 Nov 2021</span></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-teal">SL</div>
+              <div><div class="req-name">Sandra Lee</div><div class="req-email">sandralee@mail.com</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">Billing discrepancy on November invoice</div></td>
+          <td><span class="assignee">Bruce</span></td>
+          <td><span class="badge badge-onhold">On Hold</span></td>
+          <td><span class="last-update">18 Nov 2021</span></td>
+        </tr>
+
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>
+            <div class="requester">
+              <div class="av av-purple">TN</div>
+              <div><div class="req-name">Tom Nguyen</div><div class="req-email">tom.nguyen@corp.io</div></div>
+            </div>
+          </td>
+          <td class="subject-cell"><div class="subject-text">Feature request: bulk export to CSV</div></td>
+          <td><span class="assignee">unassigned</span></td>
+          <td><span class="badge badge-solved">Solved</span></td>
+          <td><span class="last-update">15 Nov 2021</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

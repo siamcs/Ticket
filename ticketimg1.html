@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Support Ticket</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg-primary: #f8fafc;
+    --bg-card: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-label: #475569;
+    --border-color: #e2e8f0;
+    --border-focus: #3b82f6;
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --danger-bg: #fef2f2;
+    --danger-text: #ef4444;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body{
+    background: var(--bg-primary);
+    color: var(--text-main);
+    padding: 40px 20px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.container{
+    max-width: 1320px;
+    margin: auto;
+}
+
+.header{
+    margin-bottom: 32px;
+}
+
+.header h2{
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+}
+
+.header p{
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-size: 15px;
+}
+
+.form-layout{
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 32px;
+    align-items: start;
+}
+
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.card{
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+.section-title{
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+.grid-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.grid-4{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.grid-3{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.grid-2{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.field{
+    display: flex;
+    flex-direction: column;
+}
+
+label{
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-label);
+}
+
+input,
+select,
+textarea{
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: var(--text-main);
+    background-color: #fff;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #94a3b8;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+textarea{
+    resize: none;
+    min-height: 150px;
+    line-height: 1.5;
+}
+
+.upload-box{
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    background: #f8fafc;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.upload-box:hover {
+    border-color: var(--border-focus);
+    background: #f0f7ff;
+    color: var(--primary-color);
+}
+
+.upload-box svg {
+    width: 32px;
+    height: 32px;
+    color: #94a3b8;
+}
+
+.right-panel{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 40px;
+}
+
+.buttons{
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.btn{
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary{
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    color: var(--text-label);
+}
+
+.btn-secondary:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: var(--text-main);
+}
+
+.btn-primary{
+    background: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+@media(max-width: 1150px){
+    body {
+        padding: 20px 16px;
+    }
+    .form-layout{
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .right-panel {
+        position: static;
+    }
+}
+
+@media(max-width: 768px){
+    .grid-4,
+    .grid-3,
+    .grid-2 {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .buttons {
+        flex-direction: column-reverse;
+    }
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h2>New Support Ticket</h2>
+        <p>Create a new support ticket for your customer</p>
+    </div>
+
+    <div class="form-layout">
+
+        <div class="left-panel">
+
+            <div class="card">
+                <div class="section-title">Requester Information</div>
+                
+                <div class="grid-stack">
+                    <div class="grid-3">
+                        <!-- <div class="field">
+                            <label>Requester Type *</label>
+                            <select>
+                                <option>Individual</option>
+                                <option>Company</option>
+                            </select>
+                        </div> -->
+
+                        <div class="field">
+                            <label>Customer / Company *</label>
+                            <input type="text" placeholder="Search customer or company">
+                        </div>
+
+                        <div class="field">
+                            <label>Contact Person *</label>
+                            <select>
+                                <option>Select contact person</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid-4">
+                        <div class="field">
+                            <label>Email *</label>
+                            <input type="email" placeholder="example@company.com">
+                        </div>
+
+                        <div class="field">
+                            <label>Phone</label>
+                            <input type="text" placeholder="+880 1XXXXXXXXX">
+                        </div>
+
+                        <div class="field">
+                            <label>Department</label>
+                            <select>
+                                <option>Select department</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Location / Branch</label>
+                            <select>
+                                <option>Select location</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-title">Ticket Details</div>
+
+                <div class="grid-stack">
+                    <div class="field">
+                        <label>Subject *</label>
+                        <input type="text" placeholder="Enter a brief summary">
+                    </div>
+
+                    <div class="field">
+                        <label>Description *</label>
+                        <textarea placeholder="Describe the problem in detail..."></textarea>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="field">
+                            <label>Category *</label>
+                            <select>
+                                <option>Select category</option>
+                                <option>Hardware</option>
+                                <option>Software</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Sub Category *</label>
+                            <select>
+                                <option>Select sub category</option>
+                                <option>CC TV</option>
+                                <option>Access Control</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid-3">
+                        <div class="field">
+                            <label>Priority *</label>
+                            <select>
+                                <option>High</option>
+                                <option>Medium</option>
+                                <option>Low</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Impact *</label>
+                            <select>
+                                <option>High</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Source *</label>
+                            <select>
+                                <option>Portal</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Attachments</label>
+                        <div class="upload-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                            </svg>
+                            <span>Drag & drop files here or <span style="color: var(--primary-color); font-weight: 500;">browse</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-secondary">Cancel</button>
+                <button class="btn btn-secondary">Save as Draft</button>
+                <button class="btn btn-primary">Submit Ticket</button>
+            </div>
+
+        </div>
+
+        <div class="right-panel">
+
+            <div class="card">
+                <div class="section-title">Assignment</div>
+                <div class="grid-stack">
+                    <div class="field">
+                        <label>Assign To</label>
+                        <select><option>Select agent</option></select>
+                    </div>
+
+                    <div class="field">
+                       <label>Assign Team *</label>
+<select>
+    <option value="">Select Team</option>
+    <option value="frontend">Frontend Team</option>
+    <option value="backend">Backend Team</option>
+    <option value="qa">QA Team</option>
+    <option value="devops">DevOps Team</option>
+    <option value="uiux">UI/UX Team</option>
+    <option value="mobile">Mobile App Team</option>
+</select>
+                    </div>
+
+                    <!-- <div class="field">
+                        <label>CC Agents</label>
+                        <select><option>Select agents</option>
+                          <option value="1">John Smith</option>
+    <option value="2">Sarah Johnson</option>
+    <option value="3">Michael Brown</option>
+    <option value="4">Emily Davis</option>
+    <option value="5">David Wilson</option>
+                        </select>
+                       
+                    </div> -->
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-title">SLA & Timing</div>
+                <div class="grid-stack">
+                    <div class="field">
+                        <label>SLA Policy *</label>
+                        <select><option>Select SLA Policy</option></select>
+                    </div>
+
+                    <div class="field">
+                        <label>Due Date</label>
+                        <input type="date">
+                    </div>
+
+                    <div class="field">
+                        <label>Due Time</label>
+                        <input type="time">
+                    </div>
+                </div>
+            </div>
+              
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

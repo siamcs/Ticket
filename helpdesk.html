@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HelpDesk — TKT-101</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f2f5;
+  --surface:#ffffff;
+  --border:#e4e7ec;
+  --border-light:#f0f2f5;
+  --text:#111827;
+  --muted:#6b7280;
+  --hint:#9ca3af;
+  --accent:#4f46e5;
+  --accent-h:#4338ca;
+  --accent-l:#eef2ff;
+  --accent-m:#c7d2fe;
+  --green:#059669;
+  --green-l:#ecfdf5;
+  --green-m:#a7f3d0;
+  --red:#dc2626;
+  --red-l:#fef2f2;
+  --orange:#d97706;
+  --orange-l:#fffbeb;
+  --yellow:#ca8a04;
+  --yellow-l:#fefce8;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --r:10px;
+  --r-sm:6px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -1px rgba(0,0,0,.04);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#9ca3af}
+
+/* ── AVATAR ── */
+.av{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-weight:600;flex-shrink:0;letter-spacing:.02em}
+.av-sm{width:26px;height:26px;font-size:10px}
+.av-md{width:32px;height:32px;font-size:12px}
+.av-lg{width:40px;height:40px;font-size:14px}
+.av-xl{width:48px;height:48px;font-size:16px}
+.av-indigo{background:#e0e7ff;color:#4338ca}
+.av-green{background:#d1fae5;color:#065f46}
+.av-orange{background:#ffedd5;color:#c2410c}
+.av-purple{background:#f3e8ff;color:#7c3aed}
+.av-rose{background:#ffe4e6;color:#be123c}
+.av-teal{background:#ccfbf1;color:#0f766e}
+.av-blue{background:#dbeafe;color:#1d4ed8}
+.av-slate{background:#f1f5f9;color:#475569}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;white-space:nowrap;line-height:1.4}
+.badge i{font-size:7px}
+.badge-red{background:var(--red-l);color:var(--red)}
+.badge-green{background:var(--green-l);color:var(--green)}
+.badge-orange{background:var(--orange-l);color:var(--orange)}
+.badge-yellow{background:var(--yellow-l);color:var(--yellow)}
+.badge-indigo{background:var(--accent-l);color:var(--accent)}
+.badge-gray{background:#f3f4f6;color:#4b5563}
+.badge-blue{background:#dbeafe;color:#1d4ed8}
+
+/* ── BUTTONS ── */
+.btn{padding:6px 14px;border-radius:var(--r-sm);font-size:12.5px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:all .15s;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;line-height:1}
+.btn:hover{background:var(--bg);border-color:#d1d5db}
+.btn-ghost{border:none;background:transparent;color:var(--muted)}
+.btn-ghost:hover{background:var(--border-light);color:var(--text)}
+.btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-accent:hover{background:var(--accent-h);border-color:var(--accent-h)}
+.btn-split{display:inline-flex;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--accent)}
+.btn-split .sp-main{background:var(--accent);color:#fff;padding:6px 14px;font-size:12.5px;font-weight:500;cursor:pointer;border:none;display:flex;align-items:center;gap:5px}
+.btn-split .sp-arr{background:var(--accent-h);color:#fff;padding:6px 9px;cursor:pointer;border:none;border-left:1px solid rgba(255,255,255,.2);font-size:10px}
+
+/* ── TOP BAR ── */
+.topbar{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;box-shadow:var(--shadow)}
+.topbar-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--accent);text-decoration:none;flex-shrink:0}
+.topbar-logo .logo-icon{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.topbar-logo .logo-icon i{color:#fff;font-size:14px}
+.topbar-divider{width:1px;height:24px;background:var(--border)}
+.topbar-search{flex:1;max-width:420px;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-sm);padding:7px 12px;transition:border-color .15s}
+.topbar-search:focus-within{border-color:var(--accent);background:var(--surface)}
+.topbar-search input{border:none;background:transparent;outline:none;font-size:13px;color:var(--text);width:100%;font-family:var(--font)}
+.topbar-search input::placeholder{color:var(--hint)}
+.topbar-search i{color:var(--hint);font-size:13px;flex-shrink:0}
+.topbar-spacer{flex:1}
+.topbar-actions{display:flex;align-items:center;gap:6px}
+.icon-btn{width:34px;height:34px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);position:relative;transition:background .15s}
+.icon-btn:hover{background:var(--bg);color:var(--text)}
+.icon-btn i{font-size:15px}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+
+/* ── LAYOUT ── */
+.layout{flex:1;display:flex;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:216px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.sidebar-section-hdr{padding:16px 16px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--hint)}
+.nav-item{display:flex;align-items:center;justify-content:space-between;padding:7px 14px 7px 16px;cursor:pointer;color:var(--muted);font-size:12.5px;border-left:2px solid transparent;transition:all .12s;border-radius:0}
+.nav-item-inner{display:flex;align-items:center;gap:8px}
+.nav-item-inner i{font-size:13px;width:16px;text-align:center}
+.nav-item:hover{background:#f8f9fb;color:var(--text)}
+.nav-item.active{color:var(--accent);background:var(--accent-l);border-left-color:var(--accent);font-weight:500}
+.nav-cnt{font-size:10.5px;padding:1px 6px;border-radius:10px;background:#f1f3f5;color:var(--muted);font-weight:500;line-height:1.5}
+.nav-item.active .nav-cnt{background:var(--accent-m);color:var(--accent)}
+.nav-cnt.danger{background:#fee2e2;color:var(--red)}
+.sidebar-agents{padding:6px 0 10px}
+.agent-row{display:flex;align-items:center;justify-content:space-between;padding:5px 14px 5px 16px;cursor:pointer;transition:background .12s;border-radius:0}
+.agent-row:hover{background:#f8f9fb}
+.agent-info{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text)}
+.add-agent-btn{display:flex;align-items:center;gap:6px;color:var(--accent);font-size:12px;cursor:pointer;padding:7px 16px;margin-top:2px}
+.add-agent-btn:hover{text-decoration:underline}
+
+/* ── MAIN AREA ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* ── TICKET NAV ── */
+.ticket-nav{height:48px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px;flex-shrink:0}
+.tkt-id{font-weight:600;font-size:13.5px;color:var(--text)}
+.tnav-spacer{flex:1}
+
+/* ── CENTER SCROLL ── */
+.center{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+
+/* ── TICKET HEADER CARD ── */
+.tkt-hdr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;box-shadow:var(--shadow)}
+.tkt-hdr-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.tkt-title{font-size:18px;font-weight:700;color:var(--text);line-height:1.3}
+.tkt-meta{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.meta-item{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:12px}
+.meta-item i{font-size:12px;color:var(--hint)}
+.meta-item a{color:var(--accent);text-decoration:none}
+.meta-item a:hover{text-decoration:underline}
+.tkt-id-pill{font-size:11.5px;font-weight:600;color:var(--hint);background:var(--bg);padding:3px 9px;border-radius:var(--r-sm);border:1px solid var(--border)}
+
+/* ── CARD ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.card-body{padding:16px 20px}
+
+/* ── TABS ── */
+.tabs{display:flex;border-bottom:1px solid var(--border);padding:0 20px;overflow-x:auto}
+.tabs::-webkit-scrollbar{height:0}
+.tab{padding:11px 14px;font-size:12.5px;font-weight:500;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:color .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-pill{font-size:10px;background:#f1f3f5;color:var(--muted);padding:1px 6px;border-radius:9px;font-weight:500}
+.tab.active .tab-pill{background:var(--accent-l);color:var(--accent)}
+
+/* ── SECTION ── */
+.sec-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--hint);margin-bottom:12px}
+.divider{border:none;border-top:1px solid var(--border-light);margin:16px 0}
+
+/* ── INFO GRID ── */
+.info-wrap{display:flex;align-items:flex-start;gap:16px}
+.info-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:12px 32px}
+.info-field{display:flex;flex-direction:column;gap:3px}
+.info-label{font-size:11px;color:var(--hint);font-weight:500}
+.info-value{font-size:13px;color:var(--text);font-weight:400}
+.info-value.accent{color:var(--accent)}
+
+/* ── ATTACHMENTS ── */
+.att-grid{display:flex;gap:10px;flex-wrap:wrap}
+.att-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg);cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.att-item:hover{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-l)}
+.att-icon{width:34px;height:34px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:15px}
+.att-img{background:#dbeafe;color:#2563eb}
+.att-doc{background:#f3e8ff;color:#7c3aed}
+.att-zip{background:#ffedd5;color:#c2410c}
+.att-name{font-size:12.5px;font-weight:500;color:var(--text)}
+.att-size{font-size:11px;color:var(--hint)}
+
+/* ── CONVERSATIONS ── */
+.conv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.conv-filter-group{display:flex;border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
+.cfb{padding:5px 11px;font-size:12px;font-weight:500;border:none;background:transparent;color:var(--muted);cursor:pointer;border-right:1px solid var(--border);transition:background .12s}
+.cfb:last-child{border-right:none}
+.cfb.active{background:var(--accent);color:#fff}
+.conv-actions{display:flex;gap:8px}
+.conv-msg{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border-light)}
+.conv-msg:last-child{border-bottom:none}
+.conv-right{flex:1;min-width:0}
+.conv-meta{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.conv-name{font-weight:600;font-size:13px;color:var(--text)}
+.conv-time{font-size:11px;color:var(--hint);margin-left:auto}
+.conv-text{font-size:12.5px;color:var(--muted);line-height:1.6}
+.src-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em}
+.src-pub{background:var(--accent-l);color:var(--accent)}
+.src-int{background:#fef9c3;color:#854d0e}
+.src-sys{background:#f1f5f9;color:#64748b}
+.sys-av{width:32px;height:32px;border-radius:50%;background:#f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+
+/* ── REPLY BOX ── */
+.reply-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.reply-tab-bar{display:flex;border-bottom:1px solid var(--border)}
+.reply-tab{padding:10px 16px;font-size:12.5px;font-weight:500;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:color .15s}
+.reply-tab:hover{color:var(--text)}
+.reply-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.reply-editor{padding:12px 16px}
+.reply-editor textarea{width:100%;border:none;outline:none;font-family:var(--font);font-size:13px;color:var(--text);resize:none;min-height:72px;background:transparent;line-height:1.6}
+.reply-editor textarea::placeholder{color:var(--hint)}
+.reply-toolbar{display:flex;align-items:center;gap:6px;padding:8px 16px 10px;border-top:1px solid var(--border-light)}
+.reply-toolbar-tools{display:flex;align-items:center;gap:2px}
+.tool-btn{width:28px;height:28px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);border:none;background:transparent;font-size:13px;transition:background .12s}
+.tool-btn:hover{background:var(--bg);color:var(--text)}
+.reply-toolbar-spacer{flex:1}
+.reply-mentions{font-size:12px;color:var(--hint);display:flex;align-items:center;gap:4px}
+
+/* ── RIGHT PANEL ── */
+.right-panel{width:268px;background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column}
+.rp-header{padding:14px 16px;font-weight:600;font-size:13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.rp-sec{padding:14px 16px;border-bottom:1px solid var(--border)}
+.rp-sec-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--hint);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.rp-field{margin-bottom:10px}
+.rp-field:last-child{margin-bottom:0}
+.rp-label{font-size:11px;color:var(--hint);font-weight:500;margin-bottom:4px;display:block}
+.rp-val{font-size:12.5px;color:var(--text);font-weight:500}
+.rp-select{width:100%;font-size:12.5px;border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 28px 6px 10px;background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239ca3af'/%3E%3C/svg%3E") no-repeat right 9px center;color:var(--text);cursor:pointer;appearance:none;outline:none;transition:border-color .15s,box-shadow .15s;font-family:var(--font)}
+.rp-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-l)}
+.rp-input{width:100%;font-size:12.5px;border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px;background:var(--bg);color:var(--text);outline:none;font-family:var(--font);transition:border-color .15s,box-shadow .15s}
+.rp-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-l)}
+.rp-row{display:flex;align-items:center;gap:8px}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-green{background:var(--green)}.dot-red{background:var(--red)}.dot-orange{background:var(--orange)}.dot-yellow{background:#eab308}
+
+/* SLA */
+.sla-block{margin-bottom:12px}
+.sla-block:last-of-type{margin-bottom:0}
+.sla-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.sla-label{font-size:11.5px;color:var(--muted)}
+.sla-val{font-size:12px;font-weight:600}
+.sla-val.green{color:var(--green)}.sla-val.orange{color:var(--orange)}
+.sla-bar{height:4px;background:#e5e7eb;border-radius:3px;overflow:hidden}
+.sla-fill{height:100%;border-radius:3px}
+.fill-green{background:var(--green)}.fill-orange{background:var(--orange)}
+
+/* TAGS */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.tag{font-size:11px;padding:3px 9px;background:#f1f5f9;color:#475569;border-radius:20px;border:1px solid #e2e8f0;cursor:pointer;transition:background .12s}
+.tag:hover{background:#e2e8f0}
+.tag-add-btn{width:24px;height:24px;border-radius:50%;border:1.5px dashed var(--border);background:transparent;color:var(--hint);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.tag-add-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ASSIGN */
+.assignee-card{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer;transition:border-color .15s}
+.assignee-card:hover{border-color:var(--accent)}
+.assignee-card .info{flex:1;min-width:0}
+.assignee-card .info .name{font-size:12.5px;font-weight:500;color:var(--text)}
+.assignee-card .info .role{font-size:11px;color:var(--hint)}
+
+/* WATCHER */
+.watcher-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.watcher-avatars{display:flex;align-items:center}
+.watcher-avatars .av{margin-right:-6px;border:2px solid var(--surface)}
+.watcher-avatars .av:last-child{margin-right:0}
+.add-watcher{width:26px;height:26px;border-radius:50%;border:1.5px dashed var(--border);background:transparent;color:var(--hint);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:6px;transition:all .15s;flex-shrink:0}
+.add-watcher:hover{border-color:var(--accent);color:var(--accent)}
+
+/* MORE INFO */
+.more-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+.more-label{font-size:12px;color:var(--hint)}
+.more-value{font-size:12px;color:var(--text);font-weight:500}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <a href="#" class="topbar-logo">
+    <div class="logo-icon"><i class="fa-solid fa-headset"></i></div>
+    DeskFlow
+  </a>
+  <div class="topbar-divider"></div>
+  <div class="topbar-search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Search tickets, contacts, solutions…" />
+    <span style="font-size:11px;color:var(--hint);background:var(--border);padding:2px 5px;border-radius:4px;white-space:nowrap;">⌘K</span>
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-actions">
+    <div class="icon-btn"><i class="fa-regular fa-bell"></i><span class="notif-dot"></span></div>
+    <div class="icon-btn"><i class="fa-regular fa-comment-dots"></i></div>
+    <div class="icon-btn"><i class="fa-solid fa-gear"></i></div>
+    <div style="width:1px;height:24px;background:var(--border);margin:0 4px;"></div>
+    <div class="av av-md av-indigo" style="cursor:pointer;">HM</div>
+    <span style="font-size:12.5px;font-weight:500;">Hasan M.</span>
+    <i class="fa-solid fa-chevron-down" style="font-size:10px;color:var(--hint);cursor:pointer;"></i>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div style="padding:12px 16px 8px;">
+      <button class="btn btn-accent" style="width:100%;justify-content:center;"><i class="fa-solid fa-plus"></i> New Ticket</button>
+    </div>
+
+    <div class="sidebar-section-hdr">Queues</div>
+    <div class="nav-item">
+      <div class="nav-item-inner"><i class="fa-regular fa-envelope"></i> New Tickets</div>
+      <span class="nav-cnt">16</span>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-item-inner"><i class="fa-regular fa-folder-open"></i> Open Tickets</div>
+      <span class="nav-cnt">32</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-item-inner"><i class="fa-regular fa-clock"></i> Pending</div>
+      <span class="nav-cnt">30</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-item-inner"><i class="fa-regular fa-user"></i> Assigned To Me</div>
+      <span class="nav-cnt">14</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-item-inner"><i class="fa-solid fa-arrow-up"></i> Escalated</div>
+      <span class="nav-cnt">04</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-item-inner"><i class="fa-regular fa-circle-xmark"></i> Overdue</div>
+      <span class="nav-cnt danger">09</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-item-inner"><i class="fa-regular fa-circle-check"></i> Closed</div>
+      <span class="nav-cnt">150</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-item-inner"><i class="fa-solid fa-rotate-left"></i> Reopened</div>
+      <span class="nav-cnt">03</span>
+    </div>
+
+    <div class="sidebar-section-hdr" style="margin-top:8px;">Views</div>
+    <div class="nav-item"><div class="nav-item-inner"><i class="fa-solid fa-fire"></i> High Priority</div></div>
+    <div class="nav-item"><div class="nav-item-inner"><i class="fa-regular fa-user-slash"></i> Unassigned</div></div>
+    <div class="nav-item"><div class="nav-item-inner"><i class="fa-regular fa-calendar"></i> Due Today</div></div>
+    <div class="nav-item"><div class="nav-item-inner"><i class="fa-solid fa-shield-halved"></i> SLA Breached</div></div>
+    <div class="nav-item"><div class="nav-item-inner"><i class="fa-solid fa-users"></i> My Team</div></div>
+
+    <div class="sidebar-section-hdr" style="margin-top:8px;">Agents</div>
+    <div class="sidebar-agents">
+      <div class="agent-row">
+        <div class="agent-info"><div class="av av-sm av-indigo">HM</div>Hasan Mahmud</div>
+        <span class="nav-cnt">12</span>
+      </div>
+      <div class="agent-row">
+        <div class="agent-info"><div class="av av-sm av-green">RH</div>Rakib Hasan</div>
+        <span class="nav-cnt">08</span>
+      </div>
+      <div class="agent-row">
+        <div class="agent-info"><div class="av av-sm av-orange">JF</div>Jannatul F.</div>
+        <span class="nav-cnt danger">05</span>
+      </div>
+      <div class="agent-row">
+        <div class="agent-info"><div class="av av-sm av-purple">NJ</div>Nusrat Jahan</div>
+        <span class="nav-cnt">09</span>
+      </div>
+      <div class="add-agent-btn"><i class="fa-solid fa-plus" style="font-size:10px;"></i> Add Agent</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TICKET NAV -->
+    <div class="ticket-nav">
+      <button class="btn btn-ghost" style="padding:5px 8px;"><i class="fa-solid fa-arrow-left" style="font-size:11px;"></i> Back</button>
+      <div style="width:1px;height:20px;background:var(--border);"></div>
+      <span style="font-size:11.5px;color:var(--hint);">Open Tickets</span>
+      <i class="fa-solid fa-chevron-right" style="font-size:10px;color:var(--hint);"></i>
+      <span class="tkt-id">TKT-101</span>
+      <span class="badge badge-red"><i class="fa-solid fa-circle"></i> High Priority</span>
+      <div class="tnav-spacer"></div>
+      <button class="btn"><i class="fa-regular fa-star"></i></button>
+      <button class="btn"><i class="fa-solid fa-ellipsis"></i></button>
+      <button class="btn">Edit</button>
+      <div class="btn-split">
+        <button class="sp-main"><i class="fa-solid fa-reply"></i> Reply</button>
+        <button class="sp-arr"><i class="fa-solid fa-chevron-down"></i></button>
+      </div>
+    </div>
+
+    <!-- CENTER -->
+    <div class="center">
+
+      <!-- TICKET HEADER -->
+      <div class="tkt-hdr-card">
+        <div class="tkt-hdr-top">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <span class="tkt-id-pill">TKT-101</span>
+              <span class="badge badge-blue"><i class="fa-solid fa-globe" style="font-size:9px;"></i> Portal</span>
+              <span class="badge badge-gray">Incident</span>
+            </div>
+            <div class="tkt-title">Cannot Login ERP</div>
+          </div>
+          <div class="av av-lg av-green" style="margin-top:4px;">JS</div>
+        </div>
+        <div class="tkt-meta">
+          <div class="meta-item"><i class="fa-regular fa-building"></i> ABC Garments Ltd.</div>
+          <div class="meta-item"><i class="fa-regular fa-user"></i> John Smith</div>
+          <div class="meta-item"><i class="fa-regular fa-envelope"></i> <a href="#">john.smith@abc.com</a></div>
+          <div class="meta-item"><i class="fa-solid fa-phone"></i> +8801712345678</div>
+          <div class="meta-item" style="margin-left:auto;">
+            <i class="fa-regular fa-clock"></i>
+            <span>Created 10 Jun 2026, 10:10 AM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABS + CONTENT -->
+      <div class="card">
+        <div class="tabs">
+          <div class="tab active">Details</div>
+          <div class="tab">Conversations <span class="tab-pill">3</span></div>
+          <div class="tab">Activity</div>
+          <div class="tab">Attachments <span class="tab-pill">2</span></div>
+          <div class="tab">Related <span class="tab-pill">1</span></div>
+          <div class="tab">Tasks <span class="tab-pill">1</span></div>
+          <div class="tab">Approvals</div>
+          <div class="tab">Time Log</div>
+        </div>
+
+        <div class="card-body">
+
+          <!-- Customer Info -->
+          <div class="sec-label">Customer Information</div>
+          <div class="info-wrap" style="margin-bottom:0;">
+            <div class="info-grid">
+              <div class="info-field"><span class="info-label">Company</span><span class="info-value">ABC Garments Ltd.</span></div>
+              <div class="info-field"><span class="info-label">Department</span><span class="info-value">Accounts</span></div>
+              <div class="info-field"><span class="info-label">Contact Person</span><span class="info-value">John Smith</span></div>
+              <div class="info-field"><span class="info-label">Location</span><span class="info-value">Head Office</span></div>
+              <div class="info-field"><span class="info-label">Email</span><span class="info-value accent">john.smith@abc.com</span></div>
+              <div class="info-field"><span class="info-label">Asset / System</span><span class="info-value">ERP Application</span></div>
+              <div class="info-field"><span class="info-label">Phone</span><span class="info-value">+8801712345678</span></div>
+              <div class="info-field"><span class="info-label">Version</span><span class="info-value">ERP v2.5.1</span></div>
+              <div class="info-field"><span class="info-label">Customer ID</span><span class="info-value">CUST-000124</span></div>
+              <div class="info-field"><span class="info-label">Support Type</span><span class="info-value">Software</span></div>
+              <div class="info-field"><span class="info-label">Contract</span><span class="info-value">Enterprise Support Plan</span></div>
+              <div class="info-field"><span class="info-label">Customer Priority</span><span class="info-value"><span class="badge badge-red">High</span></span></div>
+              <div class="info-field"><span class="info-label">Valid Till</span><span class="info-value">31 Dec 2026</span></div>
+              <div class="info-field"><span class="info-label">Account Manager</span><span class="info-value">Rafiq Uddin</span></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Description -->
+          <div class="sec-label">Description</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:0;">User John Smith is unable to login to the ERP system. After entering valid username and password, the system shows error <strong style="color:var(--text);font-weight:500;">"Invalid Credentials"</strong>. This is blocking daily work in the Accounts department. The issue started after a scheduled maintenance window on 9 Jun 2026.</p>
+
+          <div class="divider"></div>
+
+          <!-- Attachments -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div class="sec-label" style="margin:0;">Attachments <span style="font-weight:400;color:var(--hint);">(2)</span></div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-ghost" style="padding:4px 8px;font-size:11.5px;"><i class="fa-solid fa-download"></i> Download all</button>
+              <button class="btn btn-ghost" style="padding:4px 8px;font-size:11.5px;"><i class="fa-solid fa-plus"></i> Add</button>
+            </div>
+          </div>
+          <div class="att-grid">
+            <div class="att-item">
+              <div class="att-icon att-img"><i class="fa-regular fa-image"></i></div>
+              <div><div class="att-name">login_error.png</div><div class="att-size">125 KB · PNG image</div></div>
+            </div>
+            <div class="att-item">
+              <div class="att-icon att-doc"><i class="fa-regular fa-file-lines"></i></div>
+              <div><div class="att-name">error_log.txt</div><div class="att-size">8 KB · Text file</div></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Conversations -->
+          <div class="conv-header">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="sec-label" style="margin:0;">Conversations</div>
+              <div class="conv-filter-group">
+                <button class="cfb active">All <span style="background:rgba(255,255,255,.25);padding:0 5px;border-radius:8px;margin-left:2px;">3</span></button>
+                <button class="cfb">Public 2</button>
+                <button class="cfb">Internal 1</button>
+              </div>
+            </div>
+            <div class="conv-actions">
+              <button class="btn"><i class="fa-regular fa-note-sticky"></i> Internal Note</button>
+              <button class="btn btn-accent"><i class="fa-solid fa-reply"></i> Reply</button>
+            </div>
+          </div>
+
+          <div class="conv-msg">
+            <div class="av av-md av-green">JS</div>
+            <div class="conv-right">
+              <div class="conv-meta">
+                <span class="conv-name">John Smith</span>
+                <span class="src-tag src-pub">Customer · Public</span>
+                <span class="conv-time">10 Jun 2026, 10:15 AM</span>
+              </div>
+              <div class="conv-text">I have reset my password but still getting the same issue. The error persists every time I try to log in.</div>
+            </div>
+          </div>
+
+          <div class="conv-msg">
+            <div class="av av-md av-indigo">HM</div>
+            <div class="conv-right">
+              <div class="conv-meta">
+                <span class="conv-name">Hasan Mahmud</span>
+                <span class="src-tag src-int">Agent · Internal</span>
+                <span class="conv-time">10 Jun 2026, 10:20 AM</span>
+              </div>
+              <div class="conv-text">We are checking the issue on the server side. The account may be locked after multiple failed attempts. Please try after 15 minutes and confirm.</div>
+            </div>
+          </div>
+
+          <div class="conv-msg">
+            <div class="sys-av"><i class="fa-solid fa-robot" style="font-size:12px;"></i></div>
+            <div class="conv-right">
+              <div class="conv-meta">
+                <span class="conv-name">System</span>
+                <span class="src-tag src-sys">Automated</span>
+                <span class="conv-time">10 Jun 2026, 10:10 AM</span>
+              </div>
+              <div class="conv-text">Ticket TKT-101 created by John Smith via Customer Portal. Auto-assigned to Application Support team.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- REPLY BOX -->
+      <div class="reply-box">
+        <div class="reply-tab-bar">
+          <div class="reply-tab active">Public Reply</div>
+          <div class="reply-tab">Internal Note</div>
+        </div>
+        <div class="reply-editor">
+          <textarea placeholder="Type your reply… Use @ to mention an agent or team"></textarea>
+        </div>
+        <div class="reply-toolbar">
+          <div class="reply-toolbar-tools">
+            <button class="tool-btn" title="Attach file"><i class="fa-solid fa-paperclip"></i></button>
+            <button class="tool-btn" title="Emoji"><i class="fa-regular fa-face-smile"></i></button>
+            <button class="tool-btn" title="Mention"><i class="fa-solid fa-at"></i></button>
+            <button class="tool-btn" title="Bold"><i class="fa-solid fa-bold"></i></button>
+            <button class="tool-btn" title="Insert template"><i class="fa-regular fa-file-code"></i></button>
+            <div style="width:1px;height:18px;background:var(--border);margin:0 4px;"></div>
+            <button class="tool-btn" title="KB article"><i class="fa-regular fa-lightbulb"></i></button>
+          </div>
+          <div class="reply-toolbar-spacer"></div>
+          <div class="reply-mentions" style="margin-right:10px;">
+            <i class="fa-solid fa-at" style="font-size:11px;"></i> CC someone
+          </div>
+          <div class="btn-split">
+            <button class="sp-main">Send Reply</button>
+            <button class="sp-arr"><i class="fa-solid fa-chevron-down"></i></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <aside class="right-panel">
+    <div class="rp-header">
+      Ticket Properties
+      <button class="btn btn-ghost" style="padding:3px 6px;font-size:11px;">Edit</button>
+    </div>
+
+    <!-- STATUS & PRIORITY -->
+    <div class="rp-sec">
+      <div class="rp-field">
+        <label class="rp-label">Status</label>
+        <div class="rp-row">
+          <span class="status-dot dot-green"></span>
+          <select class="rp-select" style="flex:1;">
+            <option>Open</option><option>Pending</option><option>On Hold</option><option>Resolved</option><option>Closed</option>
+          </select>
+        </div>
+      </div>
+      <div class="rp-field">
+        <label class="rp-label">Priority</label>
+        <div class="rp-row">
+          <span class="status-dot dot-red"></span>
+          <select class="rp-select" style="flex:1;">
+            <option>High</option><option>Critical</option><option>Medium</option><option>Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="rp-field">
+        <label class="rp-label">Category</label>
+        <select class="rp-select"><option>Software</option><option>Hardware</option><option>Network</option><option>Other</option></select>
+      </div>
+      <div class="rp-field">
+        <label class="rp-label">Sub Category</label>
+        <select class="rp-select"><option>Login Issue</option><option>Performance</option><option>Crash</option><option>Data Issue</option></select>
+      </div>
+      <div class="rp-field">
+        <label class="rp-label">Item</label>
+        <select class="rp-select"><option>ERP Application</option><option>Email Client</option><option>VPN</option></select>
+      </div>
+      <div class="rp-field">
+        <label class="rp-label">Ticket Type</label>
+        <select class="rp-select"><option>Incident</option><option>Problem</option><option>Service Request</option><option>Change</option></select>
+      </div>
+    </div>
+
+    <!-- ASSIGNMENT -->
+    <div class="rp-sec">
+      <div class="rp-sec-title">
+        Assignment
+        <span class="badge badge-indigo" style="margin-left:auto;cursor:pointer;font-size:10px;">Assign to me</span>
+      </div>
+      <div class="rp-field">
+        <label class="rp-label">Team</label>
+        <select class="rp-select"><option>Application Support</option><option>Network Team</option><option>Database Team</option></select>
+      </div>
+      <div class="rp-field">
+        <label class="rp-label">Agent</label>
+        <div class="assignee-card">
+          <div class="av av-sm av-indigo">HM</div>
+          <div class="info">
+            <div class="name">Hasan Mahmud</div>
+            <div class="role">Application Support</div>
+          </div>
+          <i class="fa-solid fa-chevron-down" style="font-size:10px;color:var(--hint);"></i>
+        </div>
+      </div>
+      <div class="rp-field">
+        <label class="rp-label">Watchers</label>
+        <div class="watcher-row">
+          <div class="watcher-avatars">
+            <div class="av av-sm av-green">RH</div>
+            <div class="av av-sm av-purple">NJ</div>
+          </div>
+          <button class="add-watcher"><i class="fa-solid fa-plus" style="font-size:10px;"></i></button>
+          <span style="font-size:11px;color:var(--hint);margin-left:4px;">2 watching</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLA -->
+    <div class="rp-sec">
+      <div class="rp-sec-title">SLA Information</div>
+      <div class="more-row" style="margin-bottom:8px;">
+        <span class="more-label">SLA Policy</span><span class="more-value">High Priority SLA</span>
+      </div>
+      <div class="more-row" style="margin-bottom:8px;">
+        <span class="more-label">Response Time</span><span class="more-value">30 min</span>
+      </div>
+      <div class="more-row" style="margin-bottom:10px;">
+        <span class="more-label">Resolution Time</span><span class="more-value">4 hours</span>
+      </div>
+
+      <div class="sla-block">
+        <div class="sla-top">
+          <span class="sla-label">First Response</span>
+          <span class="sla-val green"><i class="fa-solid fa-check" style="font-size:9px;"></i> 15m 20s</span>
+        </div>
+        <div class="sla-bar"><div class="sla-fill fill-green" style="width:72%;"></div></div>
+      </div>
+
+      <div class="sla-block">
+        <div class="sla-top">
+          <span class="sla-label">Time to Resolution</span>
+          <span class="sla-val orange"><i class="fa-regular fa-clock" style="font-size:9px;"></i> 2h 45m left</span>
+        </div>
+        <div class="sla-bar"><div class="sla-fill fill-orange" style="width:55%;"></div></div>
+      </div>
+
+      <div class="more-row" style="margin-top:8px;">
+        <span class="more-label">SLA Status</span>
+        <span class="badge badge-green" style="font-size:10.5px;">Within SLA</span>
+      </div>
+      <div class="more-row" style="margin-top:4px;">
+        <span class="more-label">Due Date</span>
+        <span class="more-value" style="font-size:11.5px;">10 Jun 2026, 2:10 PM</span>
+      </div>
+    </div>
+
+    <!-- TAGS -->
+    <div class="rp-sec">
+      <div class="rp-sec-title">Tags</div>
+      <div class="tags-wrap">
+        <span class="tag">erp</span>
+        <span class="tag">login</span>
+        <span class="tag">accounts</span>
+        <span class="tag">high-priority</span>
+        <button class="tag-add-btn"><i class="fa-solid fa-plus" style="font-size:10px;"></i></button>
+      </div>
+    </div>
+
+    <!-- MORE INFO -->
+    <div class="rp-sec">
+      <div class="rp-sec-title">More Information</div>
+      <div class="more-row"><span class="more-label">Source</span><span class="more-value">Customer Portal</span></div>
+      <div class="more-row"><span class="more-label">Created By</span><span class="more-value">John Smith</span></div>
+      <div class="more-row"><span class="more-label">Created</span><span class="more-value" style="font-size:11.5px;">10 Jun 2026, 10:10 AM</span></div>
+      <div class="more-row"><span class="more-label">Last Updated</span><span class="more-value" style="font-size:11.5px;">10 Jun 2026, 10:20 AM</span></div>
+      <div class="more-row"><span class="more-label">Impact</span><span class="more-value"><span class="badge badge-red" style="font-size:10.5px;">High</span></span></div>
+      <div class="more-row"><span class="more-label">Urgency</span><span class="more-value"><span class="badge badge-orange" style="font-size:10.5px;">High</span></span></div>
+      <div class="more-row"><span class="more-label">Is Billable</span><span class="more-value">No</span></div>
+      <div class="more-row"><span class="more-label">Time Spent</span><span class="more-value">0h 45m <a href="#" style="color:var(--accent);font-size:11px;text-decoration:none;">+ Log</a></span></div>
+      <div class="more-row"><span class="more-label">Resolution</span><span class="more-value" style="color:var(--hint);">Not set</span></div>
+    </div>
+
+  </aside>
+
+</div>
+</body>
+</html>
