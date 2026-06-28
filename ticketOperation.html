@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TKT-101 — Cannot Login ERP</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    background: #f4f6f8;
+    color: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: #fff;
+    border-bottom: 1px solid #e4e7ec;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border: 1px solid #d0d5dd;
+    border-radius: 6px; background: #fff; color: #344054;
+    font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none;
+  }
+  .back-btn:hover { background: #f9fafb; }
+  .ticket-id { font-size: 15px; font-weight: 700; color: #101828; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+  }
+  .badge-priority-high { background: #fff0f0; color: #c0392b; border: 1px solid #f5c6c6; }
+  .topbar-right { display: flex; align-items: center; gap: 8px; }
+  .btn {
+    padding: 7px 16px; border-radius: 6px; font-size: 13px;
+    font-weight: 500; cursor: pointer; border: 1px solid #d0d5dd;
+    background: #fff; color: #344054; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn:hover { background: #f9fafb; }
+  .btn-primary { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+  .btn-primary:hover { background: #0b5ed7; }
+  .btn-split { border-radius: 0 6px 6px 0; border-left: 1px solid rgba(255,255,255,0.3); padding: 7px 10px; }
+  .btn-group { display: flex; }
+  .btn-group .btn-primary:first-child { border-radius: 6px 0 0 6px; }
+
+  /* ── LAYOUT ── */
+  .page-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 0;
+    min-height: calc(100vh - 49px);
+  }
+
+  /* ── MAIN PANEL ── */
+  .main-panel {
+    background: #fff;
+    border-right: 1px solid #e4e7ec;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ticket-title-bar {
+    padding: 16px 20px 0;
+  }
+  .ticket-title {
+    font-size: 20px; font-weight: 700; color: #101828; margin-bottom: 8px;
+  }
+  .ticket-meta {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 13px; color: #667085; margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .ticket-meta span { display: inline-flex; align-items: center; gap: 5px; }
+  .ticket-meta i { font-size: 13px; color: #98a2b3; }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; gap: 0;
+    border-bottom: 1px solid #e4e7ec;
+    padding: 0 20px;
+  }
+  .tab {
+    padding: 10px 14px; font-size: 13px; font-weight: 500;
+    color: #667085; cursor: pointer; border-bottom: 2px solid transparent;
+    display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .tab:hover { color: #344054; }
+  .tab.active { color: #0d6efd; border-bottom-color: #0d6efd; }
+  .tab .tab-count {
+    background: #f2f4f7; color: #344054;
+    border-radius: 20px; padding: 1px 7px; font-size: 11px; font-weight: 600;
+  }
+  .tab.active .tab-count { background: #e8f0fe; color: #0d6efd; }
+
+  /* ── CONTENT AREA ── */
+  .tab-content { padding: 18px 20px; flex: 1; overflow-y: auto; }
+
+  /* ── SECTIONS ── */
+  .section {
+    border: 1px solid #e4e7ec;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .section-header {
+    padding: 12px 16px;
+    font-size: 13px; font-weight: 600; color: #101828;
+    border-bottom: 1px solid #e4e7ec;
+    background: #f9fafb;
+  }
+  .section-body { padding: 14px 16px; }
+
+  /* ── CUSTOMER INFO ── */
+  .customer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    position: relative;
+  }
+  .customer-avatar {
+    position: absolute; right: 0; top: 0;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, #a8d8b9, #6cbf8e);
+    color: #1a5e36; font-size: 16px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .info-row {
+    display: flex; flex-direction: column;
+    padding: 5px 0;
+  }
+  .info-label { font-size: 12px; color: #98a2b3; font-weight: 500; }
+  .info-value { font-size: 13px; color: #344054; font-weight: 500; margin-top: 1px; }
+
+  /* ── DESCRIPTION ── */
+  .description-text {
+    font-size: 13px; color: #344054; line-height: 1.7;
+  }
+
+  /* ── ATTACHMENTS ── */
+  .attachments-header-row {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .attachments-header-row .actions { display: flex; gap: 8px; }
+  .icon-btn {
+    background: none; border: none; cursor: pointer;
+    color: #98a2b3; font-size: 14px; padding: 4px;
+  }
+  .icon-btn:hover { color: #344054; }
+  .attachment-list { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+  .attachment-card {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border: 1px solid #e4e7ec;
+    border-radius: 8px; background: #f9fafb; min-width: 160px;
+  }
+  .attachment-icon {
+    width: 36px; height: 36px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    background: #1a1a2e; color: #fff; font-size: 11px;
+    flex-shrink: 0;
+  }
+  .attachment-icon.txt { background: #e8f4fd; color: #0d6efd; font-size: 16px; }
+  .attachment-info { display: flex; flex-direction: column; }
+  .attachment-name { font-size: 12px; font-weight: 600; color: #344054; }
+  .attachment-size { font-size: 11px; color: #98a2b3; margin-top: 2px; }
+
+  /* ── COMMENTS ── */
+  .comments-header-row {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  /* ── REPLY BOX ── */
+  .reply-box {
+    padding: 12px 20px;
+    border-top: 1px solid #e4e7ec;
+    background: #fff;
+  }
+  .reply-input-row {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid #e4e7ec; border-radius: 8px;
+    padding: 8px 12px;
+    background: #f9fafb;
+  }
+  .reply-input-row input {
+    flex: 1; border: none; background: none;
+    font-size: 13px; color: #344054; outline: none;
+  }
+  .reply-input-row input::placeholder { color: #98a2b3; }
+  .reply-actions { display: flex; align-items: center; gap: 8px; }
+  .reply-actions .icon-btn { font-size: 15px; }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    background: #fff;
+    overflow-y: auto;
+    padding: 16px;
+  }
+  .right-panel-title {
+    font-size: 15px; font-weight: 700; color: #101828;
+    margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;
+  }
+
+  /* ── PROPERTY ROWS ── */
+  .prop-section { margin-bottom: 20px; }
+  .prop-section-label {
+    font-size: 12px; font-weight: 700; color: #667085;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .prop-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #f2f4f7;
+    gap: 8px;
+  }
+  .prop-row:last-child { border-bottom: none; }
+  .prop-label { font-size: 12px; color: #667085; font-weight: 500; flex-shrink: 0; }
+  .prop-value {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: #344054; font-weight: 500;
+    text-align: right;
+  }
+  .prop-select {
+    display: flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border: 1px solid #e4e7ec;
+    border-radius: 6px; background: #fff; cursor: pointer;
+    font-size: 13px; font-weight: 500; color: #344054;
+  }
+  .prop-select i.chevron { color: #98a2b3; font-size: 11px; }
+
+  /* Status badges */
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .dot-open { background: #12b76a; }
+  .dot-high { background: #f04438; }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    border: 1px solid #e4e7ec;
+  }
+  .pill-open { background: #ecfdf3; color: #027a48; border-color: #a9efcd; }
+  .pill-high { background: #fff0f0; color: #c0392b; border-color: #f5c6c6; }
+
+  /* ── SLA ── */
+  .sla-timer { font-size: 13px; font-weight: 600; color: #12b76a; }
+  .sla-bar {
+    width: 80px; height: 5px; border-radius: 3px; background: #e4e7ec; overflow: hidden;
+  }
+  .sla-fill { height: 100%; border-radius: 3px; background: #12b76a; }
+  .sla-fill.warn { background: #f79009; }
+
+  /* ── AGENT AVATAR ── */
+  .agent-avatar {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: #0d6efd; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+  }
+
+  /* ── TAGS ── */
+  .tags-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    padding: 3px 10px; border: 1px solid #e4e7ec;
+    border-radius: 20px; font-size: 12px; color: #344054; font-weight: 500;
+    background: #f9fafb; cursor: pointer;
+  }
+  .tag:hover { border-color: #0d6efd; color: #0d6efd; }
+  .tag-add {
+    width: 24px; height: 24px; border: 1px dashed #d0d5dd;
+    border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+    color: #98a2b3; cursor: pointer; font-size: 13px;
+  }
+
+  /* ── ASSIGN ME ── */
+  .assign-me {
+    display: inline-flex; align-items: center; gap: 4px;
+    color: #0d6efd; font-size: 12px; font-weight: 500; cursor: pointer;
+  }
+  .assign-me:hover { text-decoration: underline; }
+
+  /* ── SLA STATUS ── */
+  .sla-status-pill {
+    display: inline-flex; align-items: center;
+    padding: 3px 10px; border-radius: 6px;
+    font-size: 12px; font-weight: 600;
+  }
+  .within-sla { background: #ecfdf3; color: #027a48; }
+
+  /* ── MORE INFO ── */
+  .more-info-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 5px 0; border-bottom: 1px solid #f2f4f7; font-size: 12px;
+  }
+  .more-info-row:last-child { border-bottom: none; }
+  .more-info-label { color: #667085; display: flex; align-items: center; gap: 5px; }
+  .more-info-value { color: #344054; font-weight: 500; text-align: right; }
+
+  .divider { border: none; border-top: 1px solid #e4e7ec; margin: 14px 0; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="#" class="back-btn"><i class="fa fa-chevron-left"></i> Back</a>
+    <span class="ticket-id">TKT-101</span>
+    <span class="badge badge-priority-high"><i class="fa fa-flag" style="font-size:10px;"></i> High Priority</span>
+  </div>
+  <div class="topbar-right">
+    <button class="btn"><i class="fa fa-pen"></i> Edit</button>
+    <button class="btn">More <i class="fa fa-chevron-down"></i></button>
+    <div class="btn-group">
+      <button class="btn btn-primary"><i class="fa fa-reply"></i> Reply</button>
+      <button class="btn btn-primary btn-split"><i class="fa fa-chevron-down"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE LAYOUT -->
+<div class="page-layout">
+
+  <!-- MAIN PANEL -->
+  <div class="main-panel">
+    <div class="ticket-title-bar">
+      <div class="ticket-title">Cannot Login ERP</div>
+      <div class="ticket-meta">
+        <span><i class="fa fa-building"></i> ABC Garments Ltd.</span>
+        <span><i class="fa fa-user"></i> John Smith</span>
+        <span><i class="fa fa-envelope"></i> john.smith@abc.com</span>
+        <span><i class="fa fa-phone"></i> +8001712345678</span>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active"><i class="fa fa-circle-info"></i> Details</div>
+      <div class="tab"><i class="fa fa-comments"></i> Conversations <span class="tab-count">2</span></div>
+      <div class="tab"><i class="fa fa-clock-rotate-left"></i> Activity</div>
+      <div class="tab"><i class="fa fa-paperclip"></i> Attachments <span class="tab-count">2</span></div>
+      <div class="tab"><i class="fa fa-ticket"></i> Related Tickets <span class="tab-count">1</span></div>
+      <div class="tab"><i class="fa fa-list-check"></i> Tasks <span class="tab-count">1</span></div>
+      <div class="tab"><i class="fa fa-check-square"></i> Approvals</div>
+    </div>
+
+    <!-- TAB CONTENT -->
+    <div class="tab-content">
+
+      <!-- Customer Information -->
+      <div class="section">
+        <div class="section-header">Customer Information</div>
+        <div class="section-body">
+          <div class="customer-grid">
+            <div>
+              <div class="info-row"><span class="info-label">Company</span><span class="info-value">ABC Garments Ltd.</span></div>
+              <div class="info-row"><span class="info-label">Contact Person</span><span class="info-value">John Smith</span></div>
+              <div class="info-row"><span class="info-label">Email</span><span class="info-value">john.smith@abc.com</span></div>
+              <div class="info-row"><span class="info-label">Phone</span><span class="info-value">+8001712345678</span></div>
+              <div class="info-row"><span class="info-label">Customer ID</span><span class="info-value">CUST-000134</span></div>
+              <div class="info-row"><span class="info-label">Contract</span><span class="info-value">Enterprise Support Plan</span></div>
+              <div class="info-row"><span class="info-label">Valid Till</span><span class="info-value">31 Dec 2026</span></div>
+            </div>
+            <div style="padding-right: 60px;">
+              <div class="info-row"><span class="info-label">Department</span><span class="info-value">Accounts</span></div>
+              <div class="info-row"><span class="info-label">Location</span><span class="info-value">Head Office</span></div>
+              <div class="info-row"><span class="info-label">Asset / System</span><span class="info-value">ERP Application</span></div>
+              <div class="info-row"><span class="info-label">Version</span><span class="info-value">ERP v2.5.1</span></div>
+              <div class="info-row"><span class="info-label">Support Type</span><span class="info-value">Software</span></div>
+              <div class="info-row"><span class="info-label">Customer Priority</span><span class="info-value"><span class="badge badge-priority-high">High</span></span></div>
+            </div>
+            <div class="customer-avatar">JS</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="section">
+        <div class="section-header">Description</div>
+        <div class="section-body">
+          <p class="description-text">
+            User John Smith is unable to login to the ERP system. After entering valid username and password,
+            the system shows error "Invalid Credentials".<br>
+            This is blocking daily work in Accounts department.
+          </p>
+        </div>
+      </div>
+
+      <!-- Attachments -->
+      <div class="section">
+        <div class="section-header">
+          <div class="attachments-header-row">
+            <span>Attachments (2)</span>
+            <div class="actions">
+              <button class="icon-btn" title="Download all"><i class="fa fa-download"></i></button>
+              <button class="icon-btn" title="More"><i class="fa fa-ellipsis"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="attachment-list">
+            <div class="attachment-card">
+              <div class="attachment-icon">
+                <i class="fa fa-image" style="font-size:16px;"></i>
+              </div>
+              <div class="attachment-info">
+                <span class="attachment-name">login_prng.png</span>
+                <span class="attachment-size">125 KB</span>
+              </div>
+            </div>
+            <div class="attachment-card">
+              <div class="attachment-icon txt">
+                <i class="fa fa-file-lines"></i>
+              </div>
+              <div class="attachment-info">
+                <span class="attachment-name">error_log.txt</span>
+                <span class="attachment-size">8 KB</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments -->
+      <div class="section">
+        <div class="section-header">
+          <div class="comments-header-row">
+            <span>Comments (2)</span>
+            <div class="actions">
+              <button class="icon-btn"><i class="fa fa-comment"></i></button>
+              <button class="icon-btn"><i class="fa fa-ellipsis"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="section-body" style="min-height:60px; color:#98a2b3; font-size:13px;">
+          <!-- Comments would render here -->
+          No comments yet.
+        </div>
+      </div>
+
+    </div><!-- /tab-content -->
+
+    <!-- REPLY BOX -->
+    <div class="reply-box">
+      <div class="reply-input-row">
+        <input type="text" placeholder="Type your reply..." />
+        <div class="reply-actions">
+          <button class="icon-btn"><i class="fa fa-paperclip"></i></button>
+          <button class="icon-btn"><i class="fa fa-face-smile"></i></button>
+          <button class="btn btn-primary" style="padding:5px 16px; font-size:13px;">
+            Send <i class="fa fa-chevron-down" style="font-size:10px;"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-panel -->
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="right-panel-title">
+      Ticket Properties
+      <button class="icon-btn"><i class="fa fa-gear"></i></button>
+    </div>
+
+    <!-- Status / Priority / Category -->
+    <div class="prop-section">
+      <div class="prop-row">
+        <span class="prop-label">Status</span>
+        <div class="prop-select">
+          <span class="status-dot dot-open"></span>
+          <span style="color:#027a48; font-weight:600;">Open</span>
+          <i class="fa fa-chevron-down chevron"></i>
+        </div>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label">Priority</span>
+        <div class="prop-select">
+          <i class="fa fa-flag" style="color:#f04438; font-size:12px;"></i>
+          <span style="color:#c0392b; font-weight:600;">High</span>
+          <i class="fa fa-chevron-down chevron"></i>
+        </div>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label">Category</span>
+        <div class="prop-select">
+          <i class="fa fa-folder" style="font-size:12px; color:#667085;"></i>
+          <span>Software</span>
+          <i class="fa fa-chevron-down chevron"></i>
+        </div>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label">Sub-category</span>
+        <div class="prop-select">
+          <i class="fa fa-key" style="font-size:12px; color:#667085;"></i>
+          <span>Login Issue</span>
+          <i class="fa fa-chevron-down chevron"></i>
+        </div>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label">Item</span>
+        <div class="prop-select">
+          <i class="fa fa-desktop" style="font-size:12px; color:#667085;"></i>
+          <span>ERP Application</span>
+          <i class="fa fa-chevron-down chevron"></i>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- Assignment -->
+    <div class="prop-section">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+        <span class="prop-section-label" style="margin-bottom:0;">Assignment</span>
+        <span class="assign-me"><i class="fa fa-user-plus" style="font-size:11px;"></i> Assign To Me</span>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label">Team</span>
+        <div class="prop-select">
+          <span>Application Support</span>
+          <i class="fa fa-chevron-down chevron"></i>
+        </div>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label">Agent</span>
+        <div class="prop-select">
+          <div class="agent-avatar">HM</div>
+          <span>Hasan Mahmud</span>
+          <i class="fa fa-chevron-down chevron"></i>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- SLA Information -->
+    <div class="prop-section">
+      <div class="prop-section-label">SLA Information</div>
+      <div class="prop-row">
+        <span class="prop-label"><i class="fa fa-gear" style="font-size:11px;"></i> SLA Policy</span>
+        <span class="prop-value">High Priority SLA</span>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label"><i class="fa fa-clock" style="font-size:11px;"></i> Response Time</span>
+        <span class="prop-value">30m</span>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label"><i class="fa fa-clock" style="font-size:11px;"></i> Time to Response</span>
+        <span class="prop-value" style="flex-direction:column; align-items:flex-end; gap:4px;">
+          <span class="sla-timer">15m 25s</span>
+          <div class="sla-bar"><div class="sla-fill" style="width:40%;"></div></div>
+        </span>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label"><i class="fa fa-hourglass" style="font-size:11px;"></i> Resolution Time</span>
+        <span class="prop-value">4h</span>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label"><i class="fa fa-hourglass-half" style="font-size:11px;"></i> Time to Resolution</span>
+        <span class="prop-value" style="flex-direction:column; align-items:flex-end; gap:4px;">
+          <span class="sla-timer">2h 45m</span>
+          <div class="sla-bar"><div class="sla-fill warn" style="width:65%;"></div></div>
+        </span>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label"><i class="fa fa-flag" style="font-size:11px;"></i> SLA Status</span>
+        <span class="sla-status-pill within-sla">Within SLA</span>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label"><i class="fa fa-calendar" style="font-size:11px;"></i> Due Date</span>
+        <span class="prop-value" style="font-size:12px;">10 Jun 2026, 02:10 PM</span>
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- Tags -->
+    <div class="prop-section">
+      <div class="prop-section-label">Tags</div>
+      <div class="tags-row">
+        <span class="tag">erp</span>
+        <span class="tag">login</span>
+        <span class="tag">accounts</span>
+        <span class="tag">high-priority</span>
+        <span class="tag-add"><i class="fa fa-plus" style="font-size:11px;"></i></span>
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <!-- More Information -->
+    <div class="prop-section">
+      <div class="prop-section-label">More Information</div>
+      <div class="more-info-row">
+        <span class="more-info-label"><i class="fa fa-globe"></i> Source</span>
+        <span class="more-info-value">Portal</span>
+      </div>
+      <div class="more-info-row">
+        <span class="more-info-label"><i class="fa fa-calendar"></i> Created By</span>
+        <span class="more-info-value">John Smith</span>
+      </div>
+      <div class="more-info-row">
+        <span class="more-info-label"><i class="fa fa-clock"></i> Created Time</span>
+        <span class="more-info-value">10 Jun 2026, 10:10 AM</span>
+      </div>
+      <div class="more-info-row">
+        <span class="more-info-label"><i class="fa fa-clock"></i> Last Updated</span>
+        <span class="more-info-value">10 Jun 2026, 10:20 AM</span>
+      </div>
+      <div class="more-info-row">
+        <span class="more-info-label"><i class="fa fa-tag"></i> Ticket Type</span>
+        <span class="more-info-value">Incident</span>
+      </div>
+      <div class="more-info-row">
+        <span class="more-info-label"><i class="fa fa-triangle-exclamation"></i> Impact</span>
+        <span class="more-info-value">High</span>
+      </div>
+      <div class="more-info-row">
+        <span class="more-info-label"><i class="fa fa-clock"></i> Urgency</span>
+        <span class="more-info-value">High</span>
+      </div>
+      <div class="more-info-row">
+        <span class="more-info-label"><i class="fa fa-file-invoice"></i> Is Billable</span>
+        <span class="more-info-value">No</span>
+      </div>
+    </div>
+
+  </div><!-- /right-panel -->
+</div><!-- /page-layout -->
+
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
