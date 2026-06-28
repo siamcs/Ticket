@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ticket Notification</title>
+
+<style>
+    body{
+        margin:0;
+        padding:0;
+        background:#f4f6f9;
+        font-family:Arial, Helvetica, sans-serif;
+    }
+
+    .container{
+        max-width:700px;
+        margin:30px auto;
+        background:#ffffff;
+        border-radius:10px;
+        overflow:hidden;
+        box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .header{
+        background:#0d6efd;
+        color:#fff;
+        padding:25px;
+        text-align:center;
+    }
+
+    .header h2{
+        margin:0;
+        font-size:24px;
+    }
+
+    .content{
+        padding:25px;
+    }
+
+    .section-title{
+        color:#0d6efd;
+        font-size:18px;
+        font-weight:bold;
+        margin-bottom:15px;
+        border-bottom:2px solid #e9ecef;
+        padding-bottom:8px;
+    }
+
+    .info-table{
+        width:100%;
+        border-collapse:collapse;
+        margin-bottom:20px;
+    }
+
+    .info-table td{
+        padding:10px;
+        border:1px solid #dee2e6;
+    }
+
+    .label{
+        width:35%;
+        font-weight:bold;
+        background:#f8f9fa;
+    }
+
+    .priority{
+        display:inline-block;
+        background:#dc3545;
+        color:white;
+        padding:5px 12px;
+        border-radius:20px;
+        font-size:12px;
+        font-weight:bold;
+    }
+
+    .description-box{
+        background:#f8f9fa;
+        padding:15px;
+        border-left:4px solid #0d6efd;
+        border-radius:5px;
+        margin-top:10px;
+    }
+
+    .footer{
+        background:#f8f9fa;
+        text-align:center;
+        padding:20px;
+        color:#6c757d;
+        font-size:13px;
+    }
+
+    .btn{
+        display:inline-block;
+        padding:12px 25px;
+        background:#0d6efd;
+        color:#fff !important;
+        text-decoration:none;
+        border-radius:5px;
+        margin-top:20px;
+    }
+
+    @media(max-width:600px){
+        .info-table td{
+            display:block;
+            width:100%;
+        }
+
+        .label{
+            width:100%;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h2>🎫 New Support Ticket Created</h2>
+        <p>A new ticket has been assigned and requires attention.</p>
+    </div>
+
+    <div class="content">
+
+        <div class="section-title">
+            Ticket Information
+        </div>
+
+        <table class="info-table">
+            <tr>
+                <td class="label">Ticket No</td>
+                <td>#TKT-2025-00125</td>
+            </tr>
+
+            <tr>
+                <td class="label">Subject</td>
+                <td>Email Service Not Working</td>
+            </tr>
+
+            <tr>
+                <td class="label">Category</td>
+                <td>Software Support</td>
+            </tr>
+
+            <tr>
+                <td class="label">Priority</td>
+                <td>
+                    <span class="priority">High</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">Status</td>
+                <td>Open</td>
+            </tr>
+        </table>
+
+        <div class="section-title">
+            Requester Information
+        </div>
+
+        <table class="info-table">
+            <tr>
+                <td class="label">Customer</td>
+                <td>ABC Corporation</td>
+            </tr>
+
+            <tr>
+                <td class="label">Contact Person</td>
+                <td>John Smith</td>
+            </tr>
+
+            <tr>
+                <td class="label">Email</td>
+                <td>john.smith@abc.com</td>
+            </tr>
+
+            <tr>
+                <td class="label">Phone</td>
+                <td>+8801712345678</td>
+            </tr>
+        </table>
+
+        <div class="section-title">
+            Assignment Details
+        </div>
+
+        <table class="info-table">
+            <tr>
+                <td class="label">Team</td>
+                <td>IT Support Team</td>
+            </tr>
+
+            <tr>
+                <td class="label">Assigned To</td>
+                <td>Michael Johnson</td>
+            </tr>
+
+            <tr>
+                <td class="label">SLA</td>
+                <td>8 Hours Response Time</td>
+            </tr>
+        </table>
+
+        <div class="section-title">
+            Description
+        </div>
+
+        <div class="description-box">
+            Users are unable to send or receive emails since this morning.
+            Outlook shows connection timeout errors.
+        </div>
+
+        <center>
+            <a href="https://your-ticket-system.com/ticket/125" class="btn">
+                View Ticket
+            </a>
+        </center>
+
+    </div>
+
+    <div class="footer">
+        This is an automated notification from Help Desk System.<br>
+        Please do not reply directly to this email.
+        <br><br>
+        © 2025 Help Desk Management System
+    </div>
+
+</div>
+
+</body>
+</html>

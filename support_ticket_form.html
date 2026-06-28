@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Support Ticket</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --surface-alt: #f8f9fc;
+    --border: #e4e7ef;
+    --border-focus: #4f6ef7;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --accent: #4f6ef7;
+    --accent-light: #eef1fe;
+    --accent-dark: #3b57e0;
+    --success: #10b981;
+    --success-light: #d1fae5;
+    --warning: #f59e0b;
+    --warning-light: #fef3c7;
+    --danger: #ef4444;
+    --danger-light: #fee2e2;
+    --info: #3b82f6;
+    --info-light: #dbeafe;
+    --sidebar-w: 300px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── TOP NAV ── */
+  .topnav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+  .topnav-left { display: flex; align-items: center; gap: 1rem; }
+  .brand { font-size: 16px; font-weight: 700; color: var(--accent); letter-spacing: -.3px; }
+  .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); }
+  .breadcrumb a { color: var(--text-secondary); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb span { color: var(--text-muted); }
+  .topnav-right { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+
+  /* ── PAGE SHELL ── */
+  .page-wrap { max-width: 1240px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .page-title { font-size: 22px; font-weight: 700; color: var(--text-primary); }
+  .page-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* ── STEPPER ── */
+  .stepper {
+    display: flex; align-items: center; gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: .75rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .step-item { display: flex; align-items: center; gap: 10px; flex: 1; }
+  .step-item:last-child { flex: none; }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; flex-shrink: 0;
+    border: 2px solid var(--border);
+    background: var(--surface); color: var(--text-muted);
+    transition: all .2s;
+  }
+  .step-num.done { background: var(--success); border-color: var(--success); color: #fff; }
+  .step-num.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .step-label { font-size: 12px; font-weight: 500; color: var(--text-muted); white-space: nowrap; }
+  .step-label.active { color: var(--accent); }
+  .step-label.done { color: var(--success); }
+  .step-connector { flex: 1; height: 1px; background: var(--border); margin: 0 .5rem; min-width: 20px; }
+  .step-connector.done { background: var(--success); }
+
+  /* ── LAYOUT ── */
+  .form-layout { display: grid; grid-template-columns: 1fr var(--sidebar-w); gap: 1.25rem; align-items: start; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.125rem;
+    overflow: hidden;
+  }
+  .card-head {
+    padding: .875rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface);
+  }
+  .card-head-left { display: flex; align-items: center; gap: 10px; }
+  .card-head-icon {
+    width: 30px; height: 30px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent-light); color: var(--accent); font-size: 14px;
+  }
+  .card-head-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .card-head-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .card-body { padding: 1.25rem; }
+  .card-optional-badge {
+    font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px;
+    background: var(--surface-alt); color: var(--text-muted); border: 1px solid var(--border);
+  }
+
+  /* ── GRID HELPERS ── */
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .g-full { grid-column: 1 / -1; }
+  .stack { display: flex; flex-direction: column; gap: 1rem; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); margin: .25rem 0; }
+
+  /* ── FIELD ── */
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-size: 12px; font-weight: 500; color: var(--text-secondary);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .req { color: var(--danger); font-size: 10px; }
+
+  /* ── INPUTS ── */
+  input[type=text], input[type=email], input[type=search],
+  input[type=tel], input[type=datetime-local], select, textarea {
+    width: 100%;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 11px;
+    font-size: 13px;
+    color: var(--text-primary);
+    font-family: inherit;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+    appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(79,110,247,.12);
+    background: var(--surface);
+  }
+  input::placeholder, textarea::placeholder { color: var(--text-muted); }
+  textarea { resize: vertical; min-height: 96px; }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+    cursor: pointer;
+  }
+
+  /* input with icon prefix */
+  .input-icon { position: relative; }
+  .input-icon i { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; pointer-events: none; }
+  .input-icon input { padding-left: 32px; }
+
+  /* char count */
+  .char-hint { font-size: 11px; color: var(--text-muted); text-align: right; }
+
+  /* helper text */
+  .field-hint { font-size: 11px; color: var(--text-muted); line-height: 1.45; }
+
+  /* ── TICKET TYPE PICKER ── */
+  .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .type-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: .75rem .5rem;
+    text-align: center;
+    cursor: pointer;
+    background: var(--surface);
+    transition: all .15s;
+    user-select: none;
+  }
+  .type-card:hover { border-color: var(--accent); background: var(--accent-light); }
+  .type-card.active { border-color: var(--accent); background: var(--accent-light); box-shadow: 0 0 0 2px rgba(79,110,247,.2); }
+  .type-card i { font-size: 18px; color: var(--text-muted); display: block; margin-bottom: 5px; }
+  .type-card.active i { color: var(--accent); }
+  .type-card span { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
+  .type-card.active span { color: var(--accent); }
+
+  /* ── PRIORITY PICKER ── */
+  .prio-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .prio-btn {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 6px;
+    font-size: 12px; font-weight: 600;
+    text-align: center; cursor: pointer;
+    background: var(--surface);
+    color: var(--text-secondary);
+    transition: all .15s;
+    user-select: none;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .prio-btn:hover { background: var(--surface-alt); }
+  .prio-btn.low.active { background: var(--success-light); border-color: var(--success); color: #065f46; }
+  .prio-btn.medium.active { background: var(--warning-light); border-color: var(--warning); color: #92400e; }
+  .prio-btn.high.active { background: var(--danger-light); border-color: var(--danger); color: #991b1b; }
+  .prio-btn.critical.active { background: #1a1a2e; border-color: #1a1a2e; color: #fff; }
+
+  /* ── TAGS ── */
+  .tag-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .tag {
+    background: var(--surface-alt); border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px 11px;
+    font-size: 11px; font-weight: 500; color: var(--text-secondary);
+    cursor: pointer; transition: all .15s; user-select: none;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent); }
+  .tag.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+
+  /* ── UPLOAD ZONE ── */
+  .upload-zone {
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-align: center;
+    background: var(--surface-alt);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .upload-zone:hover { border-color: var(--accent); background: var(--accent-light); }
+  .upload-zone i { font-size: 26px; color: var(--text-muted); display: block; margin-bottom: 8px; }
+  .upload-zone .uz-text { font-size: 13px; color: var(--text-secondary); }
+  .upload-zone .uz-link { color: var(--accent); font-weight: 500; cursor: pointer; }
+  .upload-zone .uz-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── INLINE NOTE ── */
+  .inline-note {
+    background: var(--info-light);
+    border-left: 3px solid var(--info);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 8px 12px;
+    font-size: 12px; color: #1e40af; line-height: 1.5;
+  }
+
+  /* ── SLA GRID ── */
+  .sla-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .sla-item small { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); display: block; margin-bottom: 4px; }
+  .sla-value { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .sla-timer {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin-top: .75rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .sla-timer-label { font-size: 11px; color: #94a3b8; }
+  .sla-timer-val { font-size: 18px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+  .sla-timer-badge {
+    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px;
+  }
+  .badge-high { background: var(--danger-light); color: #991b1b; }
+  .badge-medium { background: var(--warning-light); color: #92400e; }
+  .badge-low { background: var(--success-light); color: #065f46; }
+
+  /* ── AGENT CARD ── */
+  .agent-card {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface-alt); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: .75rem;
+  }
+  .agent-avatar {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    background: var(--accent-light); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .agent-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .agent-role { font-size: 11px; color: var(--text-muted); }
+  .agent-status { width: 8px; height: 8px; border-radius: 50%; background: var(--success); flex-shrink: 0; margin-left: auto; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 18px; border-radius: var(--radius-sm);
+    font-size: 13px; font-weight: 500; font-family: inherit;
+    cursor: pointer; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-primary);
+    transition: all .15s; white-space: nowrap;
+  }
+  .btn:hover { background: var(--surface-alt); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text-secondary); }
+  .btn-ghost:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .btn-danger { background: var(--danger-light); border-color: var(--danger); color: #991b1b; }
+  .actions-row {
+    display: flex; justify-content: flex-end; gap: 8px;
+    padding-top: .5rem;
+  }
+
+  /* ── CHECKLIST ── */
+  .checklist { display: flex; flex-direction: column; gap: 6px; }
+  .check-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+  .check-item i { font-size: 13px; }
+  .check-item.ok { color: var(--success); }
+  .check-item.warn { color: var(--warning); }
+  .check-item.err { color: var(--danger); }
+
+  /* ── RECENT TICKETS MINI ── */
+  .ticket-mini { display: flex; flex-direction: column; gap: .5rem; }
+  .ticket-mini-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; border-radius: var(--radius-sm);
+    background: var(--surface-alt); border: 1px solid var(--border);
+    font-size: 12px; cursor: pointer; transition: border-color .15s;
+  }
+  .ticket-mini-item:hover { border-color: var(--accent); }
+  .tm-id { font-weight: 600; color: var(--accent); min-width: 52px; }
+  .tm-subj { color: var(--text-secondary); flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .tm-badge { font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 20px; flex-shrink: 0; }
+  .tm-open { background: var(--info-light); color: #1e40af; }
+  .tm-resolved { background: var(--success-light); color: #065f46; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .form-layout { grid-template-columns: 1fr; }
+    .g3 { grid-template-columns: 1fr 1fr; }
+    .type-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .g2, .g3 { grid-template-columns: 1fr; }
+    .prio-row { grid-template-columns: repeat(2, 1fr); }
+    .stepper { overflow-x: auto; }
+    .page-header { flex-direction: column; gap: .75rem; }
+    .topnav { padding: 0 1rem; }
+    .page-wrap { padding: 1rem 1rem 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="topnav-left">
+    <span class="brand"><i class="fa-solid fa-headset" style="margin-right:6px"></i>HelpDesk</span>
+    <div class="breadcrumb">
+      <span>/</span>
+      <a href="#">Support</a>
+      <span>/</span>
+      <a href="#">Tickets</a>
+      <span>/</span>
+      <span style="color:var(--text-primary);font-weight:500">New Ticket</span>
+    </div>
+  </div>
+  <div class="topnav-right">
+    <button class="btn btn-ghost" style="font-size:12px"><i class="fa-regular fa-circle-question"></i> Help</button>
+    <div class="avatar">SA</div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">New Support Ticket</div>
+      <div class="page-subtitle">Fill in the details below to create and route a ticket to the right team.</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost"><i class="fa-regular fa-floppy-disk"></i> Save Draft</button>
+      <button class="btn btn-primary" onclick="submitTicket()"><i class="fa-solid fa-paper-plane"></i> Submit Ticket</button>
+    </div>
+  </div>
+
+  
+  
+
+  <!-- FORM LAYOUT -->
+  <div class="form-layout">
+
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- REQUESTER INFORMATION -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <div class="card-head-icon"><i class="fa-solid fa-user"></i></div>
+            <div>
+              <div class="card-head-title">Requester Information</div>
+              <div class="card-head-sub">Who is raising this ticket?</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="g2">
+            <div class="field">
+              <label>Customer / Company <span class="req">*</span></label>
+              <div class="input-icon">
+                <i class="fa-solid fa-building"></i>
+                <input type="search" placeholder="Search customer or company…">
+              </div>
+            </div>
+            <div class="field">
+              <label>Location / Branch</label>
+              <select>
+                <option value="">Select location</option>
+                <option>Dhaka HQ</option>
+                <option>Chittagong Branch</option>
+                <option>Sylhet Office</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Contact Person <span class="req">*</span></label>
+              <select>
+                <option value="">Select contact person</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <div class="input-icon">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" placeholder="example@company.com">
+              </div>
+            </div>
+            <div class="field">
+              <label>Phone</label>
+              <div class="input-icon">
+                <i class="fa-solid fa-phone"></i>
+                <input type="tel" placeholder="+880 1XXXXXXXXX">
+              </div>
+            </div>
+            <div class="field">
+              <label>Department</label>
+              <select>
+                <option value="">Select department</option>
+                <option>IT</option>
+                <option>Finance</option>
+                <option>HR</option>
+                <option>Operations</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="divider" style="margin:.5rem 0"></div>
+
+          <div class="g2">
+            <div class="field">
+              <label>Reported By</label>
+              <select>
+                <option>End User</option>
+                <option>Manager / Supervisor</option>
+                <option>System / Alert</option>
+                <option>Third Party</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Channel / Source <span class="req">*</span></label>
+              <select>
+                <option>Portal</option>
+                <option>Email</option>
+                <option>Phone</option>
+                <option>Chat / WhatsApp</option>
+                <option>Walk-in</option>
+                <option>API / Integration</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TICKET TYPE -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <div class="card-head-icon"><i class="fa-solid fa-tag"></i></div>
+            <div>
+              <div class="card-head-title">Ticket Type</div>
+              <div class="card-head-sub">Choose what best describes this request</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="type-grid">
+            <div class="type-card active" onclick="selectType(this)">
+              <i class="fa-solid fa-bug"></i><span>Bug / Issue</span>
+            </div>
+            <div class="type-card" onclick="selectType(this)">
+              <i class="fa-solid fa-circle-question"></i><span>Question</span>
+            </div>
+            <div class="type-card" onclick="selectType(this)">
+              <i class="fa-solid fa-gears"></i><span>Service Request</span>
+            </div>
+            <div class="type-card" onclick="selectType(this)">
+              <i class="fa-solid fa-triangle-exclamation"></i><span>Incident</span>
+            </div>
+            <div class="type-card" onclick="selectType(this)">
+              <i class="fa-solid fa-lightbulb"></i><span>Feature Request</span>
+            </div>
+            <div class="type-card" onclick="selectType(this)">
+              <i class="fa-solid fa-comments"></i><span>Consultation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TICKET DETAILS -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <div class="card-head-icon"><i class="fa-solid fa-ticket"></i></div>
+            <div>
+              <div class="card-head-title">Ticket Details</div>
+              <div class="card-head-sub">Describe the issue clearly</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body stack">
+          <div class="field">
+            <label>Subject <span class="req">*</span></label>
+            <input type="text" id="subj" placeholder="Brief summary of the issue…" maxlength="120" oninput="document.getElementById('subjCount').textContent=this.value.length+'/120'">
+            <div class="char-hint" id="subjCount">0/120</div>
+          </div>
+          <div class="field">
+            <label>Description <span class="req">*</span></label>
+            <textarea id="desc" rows="5" placeholder="Describe the problem in detail — include steps to reproduce, error messages, affected modules, number of users impacted…" oninput="document.getElementById('descCount').textContent=this.value.length+' chars'"></textarea>
+            <div class="char-hint" id="descCount">0 chars</div>
+          </div>
+
+          <div class="g2">
+            <div class="field">
+              <label>Category <span class="req">*</span></label>
+              <select id="TicketCategoryId">
+                <option value="">Select category</option>
+                <option>Hardware</option>
+                <option>Software</option>
+                <option>Network</option>
+                <option>Security</option>
+                <option>Billing</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Sub Category <span class="req">*</span></label>
+              <select>
+                <option value="">Select sub category</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Tags</label>
+            <div class="tag-wrap">
+              <span class="tag" onclick="this.classList.toggle('active')">Network</span>
+              <span class="tag active" onclick="this.classList.toggle('active')">Hardware</span>
+              <span class="tag" onclick="this.classList.toggle('active')">Software</span>
+              <span class="tag" onclick="this.classList.toggle('active')">Access</span>
+              <span class="tag" onclick="this.classList.toggle('active')">Billing</span>
+              <span class="tag" onclick="this.classList.toggle('active')">Security</span>
+              <span class="tag" onclick="this.classList.toggle('active')">Performance</span>
+              <span class="tag" onclick="this.classList.toggle('active')">+ Add tag</span>
+            </div>
+          </div>
+
+          <div class="g3">
+            <div class="field">
+              <label>Priority <span class="req">*</span></label>
+              <div class="prio-row" style="grid-template-columns:1fr 1fr;gap:5px">
+                <div class="prio-btn low" onclick="setPrio('low',this)"><i class="fa-solid fa-circle" style="font-size:7px;color:#10b981"></i>Low</div>
+                <div class="prio-btn medium active" onclick="setPrio('medium',this)"><i class="fa-solid fa-circle" style="font-size:7px;color:#f59e0b"></i>Medium</div>
+                <div class="prio-btn high" onclick="setPrio('high',this)"><i class="fa-solid fa-circle" style="font-size:7px;color:#ef4444"></i>High</div>
+                <div class="prio-btn critical" onclick="setPrio('critical',this)"><i class="fa-solid fa-circle" style="font-size:7px;color:#64748b"></i>Critical</div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Impact <span class="req">*</span></label>
+              <select>
+                <option>Low — single user</option>
+                <option selected>Medium — team / dept</option>
+                <option>High — company-wide</option>
+                <option>Critical — service down</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Due Date</label>
+              <input type="datetime-local">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ATTACHMENTS -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <div class="card-head-icon"><i class="fa-solid fa-paperclip"></i></div>
+            <div>
+              <div class="card-head-title">Attachments</div>
+            </div>
+          </div>
+          <span class="card-optional-badge">Optional</span>
+        </div>
+        <div class="card-body">
+          <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <div class="uz-text">Drag & drop files here or <span class="uz-link">browse files</span></div>
+            <div class="uz-hint">Supports PNG, JPG, PDF, DOCX, ZIP · Max 25 MB per file · Up to 10 files</div>
+            <input type="file" id="fileInput" multiple style="display:none">
+          </div>
+        </div>
+      </div>
+
+      <!-- RELATED / ADDITIONAL -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <div class="card-head-icon"><i class="fa-solid fa-link"></i></div>
+            <div>
+              <div class="card-head-title">Additional Info</div>
+            </div>
+          </div>
+          <span class="card-optional-badge">Optional</span>
+        </div>
+        <div class="card-body stack">
+          <div class="field">
+            <label>Related Tickets</label>
+            <div class="input-icon">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="search" placeholder="Search by ticket ID or subject…">
+            </div>
+            <div class="inline-note" style="margin-top:6px"><i class="fa-solid fa-circle-info" style="margin-right:4px"></i>Linking related tickets helps agents spot patterns and share resolutions faster.</div>
+          </div>
+          <div style="border-top:1px solid var(--border);padding-top:1rem">
+            <div class="field">
+              <label>Recent tickets from this customer</label>
+            </div>
+            <div class="ticket-mini">
+              <div class="ticket-mini-item">
+                <span class="tm-id">#TK-1041</span>
+                <span class="tm-subj">Email service not syncing on mobile</span>
+                <span class="tm-badge tm-open">Open</span>
+              </div>
+              <div class="ticket-mini-item">
+                <span class="tm-id">#TK-0998</span>
+                <span class="tm-subj">VPN disconnects after 30 minutes</span>
+                <span class="tm-badge tm-resolved">Resolved</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="actions-row">
+        <button class="btn btn-ghost"><i class="fa-solid fa-xmark"></i> Cancel</button>
+        <button class="btn"><i class="fa-regular fa-floppy-disk"></i> Save Draft</button>
+        <button class="btn btn-primary" onclick="submitTicket()"><i class="fa-solid fa-paper-plane"></i> Submit Ticket</button>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN (SIDEBAR) -->
+    <div>
+
+      <!-- ASSIGNMENT -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <div class="card-head-icon"><i class="fa-solid fa-users"></i></div>
+            <div><div class="card-head-title">Assignment</div></div>
+          </div>
+        </div>
+        <div class="card-body stack">
+          <div class="field">
+            <label>Assign Team <span class="req">*</span></label>
+            <select id="TeamId">
+              <option value="">Select team</option>
+              <option>Level 1 Support</option>
+              <option>Level 2 — Network</option>
+              <option>Level 2 — Security</option>
+              <option>Development</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Assign to Agent</label>
+            <select id="AssignTo">
+              <option value="">Auto-assign</option>
+              <option>Mahfuz Alam</option>
+              <option>Ruba Hossain</option>
+              <option>Tanvir Khan</option>
+            </select>
+          </div>
+          <div class="agent-card" id="agentCard" style="display:none">
+            <div class="agent-avatar">MA</div>
+            <div>
+              <div class="agent-name">Mahfuz Alam</div>
+              <div class="agent-role">Level 1 Support · 3 open tickets</div>
+            </div>
+            <div class="agent-status"></div>
+          </div>
+          <div class="field">
+            <label>Watchers</label>
+            <input type="text" placeholder="Add agents to notify on updates">
+          </div>
+          <div class="field">
+            <label>Notify Customer</label>
+            <select>
+              <option>Yes — send confirmation email</option>
+              <option>No</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLA -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <div class="card-head-icon"><i class="fa-solid fa-gauge"></i></div>
+            <div><div class="card-head-title">SLA</div></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="sla-grid">
+            <div class="sla-item">
+              <small>SLA Name</small>
+              <div class="sla-value">Demo SLA</div>
+            </div>
+            <div class="sla-item">
+              <small>Priority</small>
+              <div class="sla-value"><span class="tm-badge badge-high">High</span></div>
+            </div>
+            <div class="sla-item">
+              <small>First Response</small>
+              <div class="sla-value">4 hours</div>
+            </div>
+            <div class="sla-item">
+              <small>Resolution</small>
+              <div class="sla-value">24 hours</div>
+            </div>
+          </div>
+          <div class="sla-timer">
+            <div>
+              <div class="sla-timer-label">Response deadline</div>
+              <div class="sla-timer-val" id="timerDisplay">03:58:44</div>
+            </div>
+            <div style="text-align:right">
+              <div class="sla-timer-label" style="margin-bottom:4px">Business hours</div>
+              <div style="font-size:11px;color:#94a3b8">Sun – Thu</div>
+              <div style="font-size:11px;color:#94a3b8">9 AM – 6 PM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCHEDULE -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <div class="card-head-icon"><i class="fa-regular fa-calendar"></i></div>
+            <div><div class="card-head-title">Schedule</div></div>
+          </div>
+          <span class="card-optional-badge">Optional</span>
+        </div>
+        <div class="card-body stack">
+          <div class="field">
+            <label>Preferred Contact Time</label>
+            <select>
+              <option>Any time during business hours</option>
+              <option>Morning (9 AM – 12 PM)</option>
+              <option>Afternoon (12 PM – 5 PM)</option>
+              <option>Evening (5 PM – 8 PM)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Urgency Note</label>
+            <textarea rows="2" placeholder="e.g. production is down, callback needed urgently…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERNAL NOTES -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <div class="card-head-icon" style="background:#fef3c7;color:#92400e"><i class="fa-solid fa-lock"></i></div>
+            <div>
+              <div class="card-head-title">Internal Note</div>
+              <div class="card-head-sub">Not visible to the customer</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="field">
+            <textarea rows="3" placeholder="Add context for the handling agent — workarounds, history, related issues…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMISSION CHECKLIST -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <div class="card-head-icon" style="background:#d1fae5;color:#065f46"><i class="fa-solid fa-list-check"></i></div>
+            <div><div class="card-head-title">Checklist</div></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="checklist">
+            <div class="check-item ok"><i class="fa-solid fa-circle-check"></i> Customer selected</div>
+            <div class="check-item ok"><i class="fa-solid fa-circle-check"></i> Contact person filled</div>
+            <div class="check-item err"><i class="fa-solid fa-circle-xmark"></i> Subject is empty</div>
+            <div class="check-item err"><i class="fa-solid fa-circle-xmark"></i> Description is empty</div>
+            <div class="check-item warn"><i class="fa-solid fa-circle-exclamation"></i> No team assigned</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function selectType(el) {
+  el.closest('.type-grid').querySelectorAll('.type-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function setPrio(level, el) {
+  el.closest('.prio-row').querySelectorAll('.prio-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Live SLA countdown
+let secs = 14324;
+function updateTimer() {
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  const s = secs % 60;
+  document.getElementById('timerDisplay').textContent =
+    String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  if (secs > 0) secs--;
+}
+updateTimer();
+setInterval(updateTimer, 1000);
+
+// Show agent card on selection
+document.getElementById('AssignTo').addEventListener('change', function() {
+  const card = document.getElementById('agentCard');
+  card.style.display = this.value ? 'flex' : 'none';
+});
+
+function submitTicket() {
+  alert('Ticket submitted successfully!\nTicket ID: #TK-1042');
+}
+</script>
+</body>
+</html>
